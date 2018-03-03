@@ -1,11 +1,22 @@
 <?php
 require "setup.php";
 
-if (!$user->isLogged() && isset($_POST["email"])) {
-    //TODO: Escape user input properly
+if (!$user->isLogged()) {
+	if (isset($_POST["email"])) {
+		try {
+			$user->login($_POST["email"], $_POST["password"]);
+		} catch (\Exception $e) {
 
-    $user->login($_POST["email"], $_POST["password"]);
+		}
+
+		// TODO: Catch exception
+	} elseif ($_SERVER["PHP_SELF"] != "/index.php") {
+		header("location:/index.php");
+	}
 }
+
+$name = $user->getName();
+$name = strstr($name, " ", true) ?: $name;
 
 ?>
 <!DOCTYPE html>
@@ -17,21 +28,19 @@ if (!$user->isLogged() && isset($_POST["email"])) {
 	</head>
 	<body>
 		<header>
-			<a href="index.php"> <h1 class="header-text">Database</h1> </a>
-			<?php if ($user->isLogged()): ?>
-				<div class="greeting">
-					<h2>Welcome <?php echo $user->getFirstName(); ?></h2>
-				</div>
-			<?php else: ?>
-			<form class="inline-form" action="<?php $_SERVER["PHP_SELF"] ?>" method="POST">
-				<input type="email" name="email" placeholder="e-mail">
-				<input type="password" name="password" placeholder="password">
-				<input type="submit" value="Login">
-			</form>
-			<?php if (isset($_POST["email"])): ?>
-				<div class="alert">
-					Invalid email or password
-				</div>
-			<?php endif; ?>
-			<?php endif; ?>
+			<div class="container">
+				<a href="index.php" class="header-brand">Database</a>
+				<?php if ($user->isLogged()): ?>
+					<div class="header-sidetext">
+						Welcome <?php echo $name; ?>
+					</div>
+				<?php else: ?>
+					<form class="header-form" action="<?php $_SERVER["PHP_SELF"] ?>" method="POST">
+						<input class="form-control"type="email" name="email" placeholder="e-mail">
+						<input type="password" name="password" placeholder="password">
+						<input type="submit" value="Login">
+					</form>
+				<?php endif; ?>
+
+			</div>
 		</header>
