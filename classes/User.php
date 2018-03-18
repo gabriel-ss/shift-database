@@ -80,8 +80,8 @@ class User
  	 * Receives a PDO connection as the first argument. The constructor can also
 	 * take an user id as an optional parameter. In this case the class will
 	 * properly handle the user id and update the passed variable making
-	 * possible to use PHP sessions to store the user's id. It's also possible to
-	 * define the names of the tables and their columns passing they in
+	 * possible to use PHP sessions to store the user's id. It's also possible
+	 * to define the names of the tables and their columns passing they in
 	 * associative arrays
 	 *
 	 * @param PDO $connection A PDO object connected to the users database
@@ -144,15 +144,15 @@ class User
 	{
 		$query = $this->connection->prepare( (isset($this->accessTable) ?
 
-			"SELECT {$this->userTable["email"]}, {$this->userTable["name"]}, " .
-			"{$this->accessTable["level"]} FROM {$this->dbTables['userTable']} " .
-			"INNER JOIN {$this->dbTables["accessTable"]} ON " .
-			"{$this->dbTables["accessTable"]}.{$this->accessTable["id"]} = " .
-			"{$this->dbTables["userTable"]}.{$this->userTable["accessLevel"]} " .
-			"WHERE {$this->userTable["id"]}=?"
+			"SELECT {$this->userTable["email"]}, {$this->userTable["name"]},
+			{$this->accessTable["level"]} FROM {$this->dbTables['userTable']}
+			INNER JOIN {$this->dbTables["accessTable"]} ON
+			{$this->dbTables["accessTable"]}.{$this->accessTable["id"]} =
+			{$this->dbTables["userTable"]}.{$this->userTable["accessLevel"]}
+			WHERE {$this->userTable["id"]}=?"
 			:
-			"SELECT {$this->userTable["email"]}, {$this->userTable["name"]}, " .
-			"FROM {$this->dbTables['userTable']} WHERE {$this->userTable["id"]}=?"
+			"SELECT {$this->userTable["email"]}, {$this->userTable["name"]},
+			FROM {$this->dbTables['userTable']} WHERE {$this->userTable["id"]}=?"
 		));
 		$query->execute([$this->id]);
 		$result = $query->fetch();
@@ -180,8 +180,8 @@ class User
 			throw new Exception("Invalid Email");
 
 		$query = $this->connection->prepare(
-			"SELECT {$this->userTable["id"]} FROM {$this->dbTables['userTable']} ".
-			"WHERE {$this->userTable["email"]}=?"
+			"SELECT {$this->userTable["id"]} FROM {$this->dbTables['userTable']}
+			WHERE {$this->userTable["email"]}=?"
 		);
 
 		$query->execute([$email]);
@@ -193,9 +193,9 @@ class User
 		$password = password_hash($password, PASSWORD_DEFAULT);
 
 		$query = $this->connection->prepare(
-			"INSERT INTO {$this->dbTables['userTable']} " .
-			"({$this->userTable["email"]}, {$this->userTable["name"]}, " .
-			"{$this->userTable["password"]}) VALUES (?, ?, ?)"
+			"INSERT INTO {$this->dbTables['userTable']}
+			({$this->userTable["email"]}, {$this->userTable["name"]},
+			{$this->userTable["password"]}) VALUES (?, ?, ?)"
 		);
 
 		$query->execute([$email, $name, $password]);
@@ -214,17 +214,17 @@ class User
 	{
 		$query = $this->connection->prepare( (isset($this->accessTable) ?
 
-			"SELECT {$this->userTable["id"]}, {$this->userTable["name"]}, " .
-			"{$this->userTable["password"]}, {$this->accessTable["level"]} ".
-			"FROM {$this->dbTables['userTable']} INNER JOIN " .
-			"{$this->dbTables["accessTable"]} ON " .
-			"{$this->dbTables["accessTable"]}.{$this->accessTable["id"]} = " .
-			"{$this->dbTables["userTable"]}.{$this->userTable["accessLevel"]} " .
-			"WHERE {$this->userTable["email"]}=?"
+			"SELECT {$this->userTable["id"]}, {$this->userTable["name"]},
+			{$this->userTable["password"]}, {$this->accessTable["level"]}
+			FROM {$this->dbTables['userTable']} INNER JOIN
+			{$this->dbTables["accessTable"]} ON
+			{$this->dbTables["accessTable"]}.{$this->accessTable["id"]} =
+			{$this->dbTables["userTable"]}.{$this->userTable["accessLevel"]}
+			WHERE {$this->userTable["email"]}=?"
 			:
-			"SELECT {$this->userTable["id"]}, {$this->userTable["name"]}, " .
-			"{$this->userTable["password"]} FROM {$this->dbTables['userTable']} " .
-			"WHERE {$this->userTable["email"]}=?"
+			"SELECT {$this->userTable["id"]}, {$this->userTable["name"]},
+			{$this->userTable["password"]} FROM {$this->dbTables['userTable']}
+			WHERE {$this->userTable["email"]}=?"
 		));
 
 		$query->execute([$email]);
@@ -292,8 +292,8 @@ class User
 	public function modifyName($name)
 	{
 		$query = $this->connection->prepare(
-			"UPDATE {$this->dbTables['userTable']} SET " .
-			"{$this->userTable["name"]}=? WHERE {$this->userTable["id"]}=?"
+			"UPDATE {$this->dbTables['userTable']} SET
+			{$this->userTable["name"]}=? WHERE {$this->userTable["id"]}=?"
 		);
 
 		$query->execute([$name, $this->id]);
@@ -311,8 +311,8 @@ class User
 			throw new Exception("Invalid Email");
 
 		$query = $this->connection->prepare(
-			"UPDATE {$this->dbTables['userTable']} SET " .
-			"{$this->userTable["email"]}=? WHERE {$this->userTable["id"]}=?"
+			"UPDATE {$this->dbTables['userTable']} SET
+			{$this->userTable["email"]}=? WHERE {$this->userTable["id"]}=?"
 		);
 
 		$query->execute([$email, $this->id]);
@@ -329,8 +329,8 @@ class User
 		$password = password_hash($password, PASSWORD_DEFAULT);
 
 		$query = $this->connection->prepare(
-			"UPDATE {$this->dbTables['userTable']} SET " .
-			"{$this->userTable["password"]}=? WHERE {$this->userTable["id"]}=?"
+			"UPDATE {$this->dbTables['userTable']} SET
+			{$this->userTable["password"]}=? WHERE {$this->userTable["id"]}=?"
 		);
 
 		$query->execute([$password, $this->id]);
@@ -345,8 +345,8 @@ class User
 	public function modifyAccessLevel($accessLevel)
 	{
 		$query = $this->connection->prepare(
-			"SELECT {$this->accessTable["id"]} FROM ".
-			"{$this->dbTables['accessTable']} WHERE {$this->accessTable["level"]}=?"
+			"SELECT {$this->accessTable["id"]} FROM
+			{$this->dbTables['accessTable']} WHERE {$this->accessTable["level"]}=?"
 		);
 
 		$query->execute([$accessLevel]);
@@ -358,8 +358,8 @@ class User
 		$accessId = $query->fetch()[$this->accessTable["id"]];
 
 		$query = $this->connection->prepare(
-			"UPDATE {$this->dbTables['userTable']} SET " .
-			"{$this->userTable["accessLevel"]}=? WHERE {$this->userTable["id"]}=?"
+			"UPDATE {$this->dbTables['userTable']} SET
+			{$this->userTable["accessLevel"]}=? WHERE {$this->userTable["id"]}=?"
 		);
 
 		$query->execute([$accessId, $this->id]);
