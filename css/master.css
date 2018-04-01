@@ -48,7 +48,8 @@ __________________________________________________ */
 
 	--fonts: Helvetica, "Trebuchet MS", Verdana, sans-serif;
 
-	--radius-small: 0.1em;
+	--radius-small: .1em;
+	--radius-big: .3em;
 
 	--trasition-short: .25s;
 	--trasition-long: 1s;
@@ -170,6 +171,33 @@ label {
 	border: 1px solid var(--dark-overlay);
 }
 
+/* Buttons
+__________________________________________________ */
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"]  {
+	border: solid var(--primary-color-alt);
+	border-width: var(--input-border);
+	background-color: var(--default-color);
+	padding: var(--input-padding);
+	border-radius: var(--radius-small);
+	color: var(--default-text-color);
+	margin: .5em 0 .25em;
+}
+
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus,
+input[type="button"]:focus{
+	border: solid var(--primary-color);
+	border-width: var(--input-border);
+	box-shadow: var(--input-focus-shadow) var(--primary-color);
+	outline: 0;
+	transition-property: all;
+	transition-duration: var(--trasition-short);
+}
+
 /* Tables
 __________________________________________________ */
 
@@ -242,6 +270,43 @@ __________________________________________________ */
 	color: var(--dark-text)
 }
 
+/* Modal
+__________________________________________________ */
+
+.overlay {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background-color: rgba(63, 63, 63, 0.5);
+}
+
+/* TODO: Add fade effect */
+
+.modal {
+	overflow: hidden;
+	margin: 2em auto;
+	max-width: 40em;
+	width: 60%;
+	background-color: var(--default-color);
+	z-index: 1;
+	padding: .75em 2em;
+	border-radius: var(--radius-big);
+	animation-name: fade;
+	animation-duration: 1s
+}
+
+@keyframes fade {
+	from {opacity: 0}
+	to {opacity: 1}
+}
+
+/* Contextual
+__________________________________________________ */
+
 .primary {
 	background-color: var(--primary-color-alt);
 }
@@ -299,6 +364,21 @@ __________________________________________________ */
 .full-width {
 	width: 100%;
 	box-sizing: border-box;
+	float: left;
+}
+
+.half-width {
+	width: 50%;
+	box-sizing: border-box;
+	float: left;
+}
+
+.float-left {
+	float: left;
+}
+
+.float-right {
+	float: right;
 }
 
 .sidepanel {
