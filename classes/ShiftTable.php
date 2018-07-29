@@ -129,6 +129,7 @@ class ShiftTable
 	/**
 	 * Searches for all shift entries of a certain user in the database and
 	 * returns an array of DateTime objects corresponding to each shift date.
+	 * No entry exists for that user returns null instead.
 	 *
 	 * @param  integer $userId The numeric identifier of the user.
 	 * @return array
@@ -141,7 +142,8 @@ class ShiftTable
 		);
 
 		$query->execute([$userId]);
-		$listSize = $query->rowCount();
+		if (!$listSize = $query->rowCount())
+			return null;
 		$data = $query->fetchAll();
 
 		for ($i=0; $i < $listSize; $i++) {
@@ -159,9 +161,13 @@ class ShiftTable
 	 */
 	public function getAsHTMLList($userId)
 	{
-		$list = $this->makeList($userId);
+
 
 		$table = "<table><tr><th>Date</th><th>Time</th></tr>";
+
+		if (!$list = $this->makeList($userId)) {
+			return $table . "<tr><td>--</td><td>--</td></tr>";
+		}
 
 		$listSize = count($list);
 		for ($i=0; $i < $listSize; $i++) {
