@@ -96,17 +96,21 @@ class User
 	 *
 	 * @param array $userTable An optional parameter that can be used to set the
 	 * column names in the table that stores user data. Defaults are:
-	 * "id" => "user_id",
-	 * "email" => "email",
-	 * "name" => "name",
-	 * "password" => "password",
-	 * "accessLevel" => "access_level"
+	 * | Key           | Default Value  |
+	 * |---------------|----------------|
+	 * | "id"          | "user_id"      |
+	 * | "email"       | "email"        |
+	 * | "name"        | "name"         |
+	 * | "password"    | "password"     |
+	 * | "accessLevel" | "access_level" |
 	 *
 	 * @param array $accessTable An optional parameter that can be used to set
 	 * the column names in the table that stores access level data. If null is
 	 * passed access levels will not be handled by the class. Defaults are:
-	 * "id" => "level_id",
-	 * "level" => "level"
+	 * | Key     | Default Value |
+	 * |---------|---------------|
+	 * | "id"    | "level_id",   |
+	 * | "level" | "level"       |
 	 */
 	public function __construct($connection, &$userId = null, $dbTables = [], $userTable = [], $accessTable = [])
 	{
@@ -246,6 +250,8 @@ class User
 
 	/**
 	 * Returns true if user is logged or false if it's not
+	 *
+	 * @return bool
 	 */
 	public function isLogged()
 	{
@@ -254,6 +260,8 @@ class User
 
 	/**
 	 * Returns user's full name
+	 *
+	 * @return string
 	 */
 	public function getName()
 	{
@@ -264,6 +272,8 @@ class User
 
 	/**
 	 * Returns user's email
+	 *
+	 * @return string
 	 */
 	public function getEmail()
 	{
@@ -273,7 +283,10 @@ class User
 	}
 
 	/**
-	 * Returns a string that represents users access level
+	 * Returns a string that represents users access level if multiple levels
+	 * arebeing used. Otherwise returns false
+	 *
+	 * @return string
 	 */
 	public function getAccessLevel()
 	{
