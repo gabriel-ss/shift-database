@@ -2,21 +2,21 @@
 require "setup.php";
 
 if (!$user->isLogged()) {
+	$failedToLogin = false;
 	if (isset($_POST["email"])) {
 		try {
 			$user->login($_POST["email"], $_POST["password"]);
-		} catch (\Exception $e) {
-
+		} catch (Exception $e) {
+			$failedToLogin = true;
 		}
-
-		// TODO: Catch exception
 	} elseif ($_SERVER["PHP_SELF"] != "/index.php") {
 		header("location:/index.php");
 	}
 }
 
 $name = $user->getName();
-$name = strstr($name, " ", true) ?: $name;
+//Gets the first name of the user
+$name = strstr($user->getName(), " ", true) ?: $name;
 
 ?>
 <!DOCTYPE html>
@@ -24,10 +24,11 @@ $name = strstr($name, " ", true) ?: $name;
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="/css/master.css">
+		<?php // TODO: Change the page title dynamically ?>
 		<title>Login</title>
 	</head>
 	<body>
-		<header>
+		<header class="primary">
 			<div class="container">
 				<a href="index.php" class="header-brand">Database</a>
 				<?php if ($user->isLogged()): ?>
