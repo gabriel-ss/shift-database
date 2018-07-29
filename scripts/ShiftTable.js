@@ -57,7 +57,7 @@ function ShiftTable(tableId = "shift-table") {
 					// If date[i] exists the id of the td element will be set to
 					// "shift:shiftID". If it does not "shift:null" will be assigned
 					htmlId = date[i] ? date[i]["shift_id"] : "null";
-					table += `<td class='shift-cell' id='shift:${htmlId}'>${cellContent}</td>`;
+					table += `<td class='shift-cell' data-shift-id='${htmlId}'>${cellContent}</td>`;
 				}
 				table += "</tr>";
 			}
@@ -68,7 +68,7 @@ function ShiftTable(tableId = "shift-table") {
 			// Runs through shift cells in the table...
 			for (let i = 0, shiftId; i < this.cells.length; i++) {
 				// ...and check their IDs.
-				shiftId = this.cells[i].id.slice(6);
+				shiftId = this.cells[i].getAttribute("data-shift-id");
 				// If the ID is valid (not null) adds a listener...
 				if (shiftId !== "null") {
 					this.cells[i].addEventListener("click", () => {
