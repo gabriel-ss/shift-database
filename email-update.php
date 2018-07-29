@@ -25,7 +25,7 @@ if (isset($_POST["email"]))
 			<label>Confirm your new e-mail
 				<input class="full-width" type="email" name="emailValidation" >
 			</label>
-			<div class="form-alert">The e-mails don't match</div>
+			<div class="alert danger hidden">The e-mails don't match</div>
 			<input type="submit" name="submit" value="Confirm">
 		</form>
 	</div>

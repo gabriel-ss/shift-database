@@ -19,31 +19,31 @@ __________________________________________________ */
 
 	--secondary-color: #A991D4;
 	--secondary-color-alt: #E7E0F3;
-	--secondary-text-color: ;
+	--secondary-text-color: var(--light-text);
 
 	--success-color: #13B955;
 	--success-color-alt: #BDEBCF;
-	--success-text-color: ;
+	--success-text-color: var(--light-text);
 
 	--danger-color: #FC3939;
 	--danger-color-alt: #FEC8C8;
-	--danger-text-color: ;
+	--danger-text-color: var(--light-text);
 
 	--warning-color: #EFA31D;
 	--warning-color-alt: #FBE5C0;
-	--warning-text-color: ;
+	--warning-text-color: var(--light-text);
 
 	--info-color: #009CDC;
 	--info-color-alt: #B8E3F5;
-	--info-text-color: ;
+	--info-text-color: var(--light-text);
 
 	--light-color: #F9F8FC;
 	--light-color-alt: #FDFDFE;
-	--light-text-color: ;
+	--light-text-color: var(--dark-text);
 
 	--dark-color: #17141F;
 	--dark-color-alt: #BEBDC0;
-	--dark-text-color: ;
+	--dark-text-color: var(--light-text);
 
 
 	--fonts: Helvetica, "Trebuchet MS", Verdana, sans-serif;
@@ -86,8 +86,6 @@ a:hover {
 __________________________________________________ */
 
 header {
-	color: var(--primary-text-color);
-	background-color: var(--primary-color);
 	margin: 0 0 3em;
 	padding: 1.5em;
 }
@@ -126,6 +124,28 @@ header::after {
 	font-size: 1rem;
 }
 
+/* Navbar
+__________________________________________________ */
+
+nav {
+	box-sizing: border-box;
+	height: auto;
+}
+
+nav ul {
+	display: flex;
+	flex: auto;
+	padding: 0;
+	margin: 0;
+	justify-content: space-between;
+}
+
+nav li {
+	padding: .75em;
+	width: 100%;
+	list-style: none;
+	margin: 0;
+}
 
 /* Forms
 __________________________________________________ */
@@ -159,16 +179,6 @@ label {
 	width: 100%;
 	box-sizing: border-box;
 	display: block;
-}
-
-
-.form-alert {
-	visibility: hidden;
-	color: var(--danger-color);
-	background-color: var(--danger-color-alt);
-	margin: 0 0 1em;
-	padding: .75em 1.25em;
-	border: 1px solid var(--dark-overlay);
 }
 
 /* Buttons
@@ -214,42 +224,11 @@ th, td {
 	text-align: left;
 }
 
-tr.primary {
-	background-color: var(--primary-color-alt);
-}
-
-tr.secondary {
-	background-color: var(--secondary-color-alt);
-}
-
-tr.success {
-	background-color: var(--success-color-alt);
-}
-
-tr.danger {
-	background-color: var(--danger-color-alt);
-}
-
-tr.warning {
-	background-color: var(--warning-color-alt);
-}
-
-tr.info {
-	background-color: var(--info-color-alt);
-}
-
-tr.light {
-	background-color: var(--light-color-alt);
-}
-
-tr.dark {
-	background-color: var(--dark-color-alt);
-}
-
 /* Highligh
 __________________________________________________ */
 
 .highligh {
+	color: var(--default-text-color);
 	background-color: var(--default-color-alt);
 	padding: 2em 1em;
 	margin-bottom: 1em;
@@ -257,6 +236,25 @@ __________________________________________________ */
 
 .lead {
 	font-size: 1.25em;
+}
+
+/* Card
+__________________________________________________ */
+
+.card {
+	border: 1px solid rgba(0, 0, 0, 0.125);
+	border-radius: var(--radius-small);
+	overflow: hidden;
+}
+
+.card header {
+	background-color: rgba(0, 0, 0, 0.03);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+	padding: .75em 1.5em;
+}
+
+.card section {
+	padding: 1.5em;
 }
 
 /* Alert
@@ -267,7 +265,7 @@ __________________________________________________ */
 	border: solid 1px var(--light-overlay);
 	border-radius: var(--radius-small);
 	margin: 0 0 1em;
-	color: var(--dark-text)
+	color: var(--dark-text);
 }
 
 /* Modal
@@ -307,39 +305,94 @@ __________________________________________________ */
 /* Contextual
 __________________________________________________ */
 
-.primary {
+
+tr.default, table.default {
+	background-color: var(--default-color-alt);
+	color: var(--default-text-color);
+}
+
+tr.primary, table.primary {
 	background-color: var(--primary-color-alt);
+	color: var(--default-text-color);
+}
+
+tr.secondary, table.secondary {
+	background-color: var(--secondary-color-alt);
+	color: var(--default-text-color);
+}
+
+tr.success, table.success {
+	background-color: var(--success-color-alt);
+	color: var(--default-text-color);
+}
+
+tr.danger, table.danger {
+	background-color: var(--danger-color-alt);
+	color: var(--default-text-color);
+}
+
+tr.warning, table.warning {
+	background-color: var(--warning-color-alt);
+	color: var(--default-text-color);
+}
+
+tr.info, table.info {
+	background-color: var(--info-color-alt);
+	color: var(--default-text-color);
+}
+
+tr.light, table.light {
+	background-color: var(--light-color-alt);
+	color: var(--default-text-color);
+}
+
+tr.dark, table.dark {
+	background-color: var(--dark-color-alt);
+	color: var(--default-text-color);
+}
+
+
+.primary {
+	background-color: var(--primary-color);
+	color: var(--primary-text-color);
 }
 
 .secondary {
-	background-color: var(--secondary-color-alt);
+	background-color: var(--secondary-color);
+	color: var(--secondary-text-color);
 }
 
 .success {
-	background-color: var(--success-color-alt);
+	background-color: var(--success-color);
+	color: var(--success-text-color);
 }
 
 .danger {
-	background-color: var(--danger-color-alt);
+	background-color: var(--danger-color);
+	color: var(--danger-text-color);
 }
 
 .warning {
-	background-color: var(--warning-color-alt);
+	background-color: var(--warning-color);
+	color: var(--warning-text-color);
 }
 
 .info {
-	background-color: var(--info-color-alt);
+	background-color: var(--info-color);
+	color: var(--info-text-color);
 }
 
 .light {
-	background-color: var(--light-color-alt);
+	background-color: var(--light-color);
+	color: var(--light-text-color);
 }
 
 .dark {
-	background-color: var(--dark-color-alt);
+	background-color: var(--dark-color);
+	color: var(--dark-text-color);
 }
 
-/* Other
+/* Helpers
 __________________________________________________ */
 
 
@@ -379,6 +432,14 @@ __________________________________________________ */
 
 .float-right {
 	float: right;
+}
+
+.hidden {
+	visibility: hidden;
+}
+
+.disabled {
+	visibility: disabled;
 }
 
 .sidepanel {

@@ -19,7 +19,7 @@ if (isset($_POST["password"])):
 		<label>Confirm your new password
 			<input class="full-width" type="password" name="passwordValidation" >
 		</label>
-		<div class="form-alert">The passwords don't match</div>
+		<div class="alert danger hidden">The passwords don't match</div>
 		<input type="submit" name="submit" value="Confirm">
 	</form>
 </div>
