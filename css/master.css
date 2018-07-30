@@ -302,6 +302,23 @@ __________________________________________________ */
 	to {opacity: 1}
 }
 
+/* Tabs
+__________________________________________________ */
+
+
+.tab-content {
+	display: none;
+}
+
+.tab-title {
+	cursor: pointer;
+	text-align: center;
+}
+
+.tab-title:hover {
+	color: var(--primary-color-alt);
+}
+
 /* Contextual
 __________________________________________________ */
 
