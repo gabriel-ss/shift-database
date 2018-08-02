@@ -1,8 +1,8 @@
 <?php
-require 'includes/header.php';
+require '../local/header.php';
 
 if ($user->isLogged()):
-    include 'includes/dashboard.php';
+    include '../local/dashboard.php';
 else: ?>
 		<div class="container">
 			<h1>Database Index</h1>

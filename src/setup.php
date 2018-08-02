@@ -1,9 +1,9 @@
 <?php
-require "config.php";
+require '../local/config.php';
 
 function autoloader($class)
 {
-    include_once 'classes/' . $class . '.php';
+    include_once '../local/classes/' . $class . '.php';
 }
 
 spl_autoload_register("autoloader");

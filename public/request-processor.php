@@ -1,4 +1,5 @@
-<?php require 'setup.php';
+<?php
+require '../local/setup.php';
 
 $shift = new Shift($connection);
 $table = new ShiftTable($connection);
