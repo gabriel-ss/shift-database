@@ -1,9 +1,11 @@
+import Modal from './modal.js';
+
 /**
  * Represents a shift in the database.
  * @param       {int} shiftId The ID corresponding to the shift in the database
  * @constructor
  */
-function Shift(shiftId) {
+export default function Shift(shiftId) {
 
 	/**
 	 * The ID corresponding to the shift in the database
@@ -21,10 +23,6 @@ function Shift(shiftId) {
 	 */
 	this.displayModal = (callback) => {
 
-		// Selects the existing modal on the page and the overlay containing it.
-		let modal = document.querySelector('.modal');
-		let overlay = modal.parentNode;
-
 		// Calls the getInfo method to retrieve data about the shift and the
 		// checkUserSubscription to determine the content of the button.
 		let request = Promise.all([this.getInfo(), this.checkUserSubscription()]);
@@ -39,7 +37,7 @@ function Shift(shiftId) {
 		modalData.buttonContent = shiftDetails[1] ? "Unsubscribe" : "Subscribe";
 
 		// Sets the content of the modal.
-		modal.innerHTML =
+		Modal.getElement().innerHTML =
 			`<h1>Shift Details</h1>
 			<div class="half-width">
 				<h2>Date:</h2>
@@ -61,14 +59,14 @@ function Shift(shiftId) {
 
 			// Adds a listener to the button to subscribe and call the callback
 			// on click.
-			modal.querySelector("button").addEventListener("click", () => {
+			Modal.getElement().querySelector("button").addEventListener("click", () => {
 				this.subscribe();
 				callback();
-				overlay.style = "display: none";
+				Modal.close();
 			});
 
 			// Unhides the overlay and the modal.
-			overlay.style = "display: block";
+			Modal.open();
 		})
 	};
 

@@ -1,12 +1,14 @@
 // TODO: Move methods to the prototype
 
+import Shift from './Shift.js';
+
 /**
  * Represents tables of shift entries.
  * @param  {String} [tableId="shift-table"] The HTML id of the table element to
  * be represented.
  * @constructor
  */
-function ShiftTable(tableId = "shift-table") {
+export default function ShiftTable(tableId = "shift-table") {
 
 	/**
 	 * The Node that represents the shift table
