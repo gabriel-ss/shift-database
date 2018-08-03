@@ -166,7 +166,7 @@ class ShiftTable
 		$table = "<table><tr><th>Date</th><th>Time</th></tr>";
 
 		if (!$list = $this->makeList($userId)) {
-			return $table . "<tr><td>--</td><td>--</td></tr>";
+			return $table . "<tr><td>--</td><td>--</td></tr></table>";
 		}
 
 		$listSize = count($list);
