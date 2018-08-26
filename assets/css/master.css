@@ -323,6 +323,49 @@ __________________________________________________ */
 	color: var(--primary-color-alt);
 }
 
+/* Slideshow
+__________________________________________________ */
+
+
+.slideshow{
+	position:relative;
+}
+.slideshow-content {
+	margin: 0 35px;
+	width: calc(100% - 70px);
+	height: inherit;
+	overflow: auto;
+}
+.prev,
+.next {
+	cursor: pointer;
+	position: absolute;
+	top: 50%;
+	width: 15px;
+	margin-top: -22px;
+	padding: 10px;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.next {
+	right: 0;
+}
+
+.prev::before {
+	content: "\2770";
+}
+
+.next::before {
+	content: "\2771";
+}
+
+.prev:hover,
+.next:hover {
+	color: var(--primary-color-alt);
+	text-decoration: none;
+}
+
 /* Contextual
 __________________________________________________ */
 
