@@ -323,6 +323,42 @@ __________________________________________________ */
 	color: var(--primary-color-alt);
 }
 
+/* Spinner
+__________________________________________________ */
+
+
+.spinner {
+	box-sizing: border-box;
+	position: relative;
+	margin: auto;
+	margin-top: -30px;
+	top: 50%;
+	height: 60px;
+	width: 60px;
+	border-radius: 50%;
+	border-top: solid var(--primary-color);
+	animation: spinner 1.5s ease-in-out infinite;
+}
+
+.spinner-double {
+	box-sizing: border-box;
+	position: relative;
+	top: 50%;
+	height: 60px;
+	width: 60px;
+	margin: -30px auto auto;
+	border-radius: 50%;
+	border: 2px solid;
+	border-color: var(--primary-color) transparent;
+	animation: spinner 1.5s linear infinite;
+}
+
+@keyframes spinner {
+	to {
+		transform: rotate(1080deg);
+	}
+}
+
 /* Slideshow
 __________________________________________________ */
 
