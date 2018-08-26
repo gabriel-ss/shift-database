@@ -1,6 +1,6 @@
 <?php
 
-require 'includes/header.php';
+require '../local/header.php';
 
 $table = new ShiftTable($connection);
 

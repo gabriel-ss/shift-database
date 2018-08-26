@@ -1,5 +1,5 @@
 <?php
-require 'includes/header.php';
+require '../local/header.php';
 
 if (isset($_POST["password"])):
 	$user->modifyPassword($_POST["password"]);
