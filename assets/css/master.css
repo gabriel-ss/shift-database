@@ -251,6 +251,7 @@ __________________________________________________ */
 	background-color: rgba(0, 0, 0, 0.03);
 	border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 	padding: .75em 1.5em;
+	margin-bottom: 1em;
 }
 
 .card section {
@@ -293,13 +294,16 @@ __________________________________________________ */
 	z-index: 1;
 	padding: .75em 2em;
 	border-radius: var(--radius-big);
-	animation-name: fade;
-	animation-duration: 1s
+	animation:slideDown .5s;
 }
 
-@keyframes fade {
-	from {opacity: 0}
-	to {opacity: 1}
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
 }
 
 /* Tabs
@@ -455,8 +459,8 @@ __________________________________________________ */
 	visibility: hidden;
 }
 
-.disabled {
-	visibility: disabled;
+.ocult {
+	display: none;
 }
 
 .sidepanel {
