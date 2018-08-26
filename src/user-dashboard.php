@@ -1,5 +1,21 @@
 <style media="screen">
 
+	#account-details {
+		float: left;
+		width: 35%;
+		padding: 1em;
+		border-style: solid;
+		border-width: 0 1px 0 0;
+		box-sizing: border-box;
+	}
+
+	#message-board {
+		float: right;
+		width: 65%;
+		padding: 1em;
+		box-sizing: border-box;
+	}
+
 	.shift-cell:not([data-shift-id="null"]):hover {
 		background: var(--dark-overlay);
 		cursor: pointer;
@@ -10,7 +26,7 @@
 		overflow: auto;
 	}
 
-	#message-board {
+	#messages {
 		height: 200px
 	}
 </style>
@@ -27,7 +43,7 @@
 		</header>
 		<section id="account" class="tab-content">
 
-			<div class="sidepanel">
+			<div id="account-details">
 				<h1>User data</h1>
 				<p class="lead">
 					Logged as
@@ -41,9 +57,9 @@
 					<a href="password-update.php">your password</a> here if you wish.
 				</p>
 			</div>
-			<div class="rightpanel">
+			<div id="message-board">
 				<h2 style="text-align:center; margin: 0;">Messages</h2>
-				<div id="message-board" class="slideshow">
+				<div id="messages" class="slideshow">
 					<div class="slideshow-content">
 						<p>&quot;O Deep Thought Computer,&quot; he said, &quot;the task we have designed you to perform is this. We want you to tell us ...&quot; he paused, &quot;... the Answer!&quot;</p>
 						<p>&quot;The answer?&quot; said Deep Thought. &quot;The answer to what?&quot;</p>
