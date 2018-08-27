@@ -390,4 +390,37 @@ class User
 		$this->accessLevel = null;
 		session_destroy();
 	}
+
+	/* Admin Utilities
+	__________________________________________________ */
+
+
+	public function sudo($id)
+	{
+		return new User($this->connection, $id, $this->dbTables, $this->userTable, $this->accessTable);
+	}
+
+	/**
+	 * Fetch data about the users from the database and returns an associative
+	 * array containing id, email, name and access level from each user.
+	 *
+	 * @return array Array containing data about each user. The keys of the array
+	 * are the name of the corresponding column in the database.
+	 */
+	public function getUserList()
+	{
+		$query = $this->connection->prepare(
+			"SELECT {$this->userTable["id"]}, {$this->userTable["email"]},
+			{$this->userTable["name"]}, {$this->accessTable["level"]}
+			FROM	{$this->dbTables["userTable"]} LEFT JOIN
+			{$this->dbTables["accessTable"]} ON
+			{$this->dbTables["accessTable"]}.{$this->accessTable["id"]} =
+			{$this->dbTables["userTable"]}.{$this->userTable["accessLevel"]}
+			ORDER BY {$this->userTable["name"]};"
+		);
+		$query->execute();
+		return $query->fetchAll();
+	}
+
+
 }
