@@ -1,4 +1,4 @@
-import Modal from './modal.js';
+import Framework from './index.js';
 
 /**
  * Represents a shift in the database.
@@ -23,6 +23,8 @@ export default function Shift(shiftId) {
 	 */
 	this.displayModal = (callback) => {
 
+		let shiftModal = Framework('#shift-modal')[0];
+
 		// Calls the getInfo method to retrieve data about the shift and the
 		// checkUserSubscription to determine the content of the button.
 		let request = Promise.all([this.getInfo(), this.checkUserSubscription()]);
@@ -37,7 +39,7 @@ export default function Shift(shiftId) {
 		modalData.buttonContent = shiftDetails[1] ? "Unsubscribe" : "Subscribe";
 
 		// Sets the content of the modal.
-		Modal.getElement().innerHTML =
+		shiftModal.element.innerHTML =
 			`<h1>Shift Details</h1>
 			<div class="half-width">
 				<h2>Date:</h2>
@@ -59,14 +61,15 @@ export default function Shift(shiftId) {
 
 			// Adds a listener to the button to subscribe and call the callback
 			// on click.
-			Modal.getElement().querySelector("button").addEventListener("click", () => {
-				this.subscribe();
-				callback();
-				Modal.close();
-			});
+			shiftModal.element.querySelector("button")
+				.addEventListener("click", () => {
+					this.subscribe();
+					callback();
+					shiftModal.hide();
+				});
 
 			// Unhides the overlay and the modal.
-			Modal.open();
+			shiftModal.show();
 		})
 	};
 
