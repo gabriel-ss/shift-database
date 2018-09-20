@@ -34,8 +34,8 @@
 	<div class="card light">
 		<header>
 			<nav class="header">
-				<ul>
-					<li class="tab-title">Account</li>
+				<ul class="tab-group">
+					<li class="tab-title" data-tab-target="account">Account</li>
 					<li class="tab-title" data-tab-target="shifts">Shift Subscription</li>
 					<li class="tab-title" data-tab-target="list">My Shifts</li>
 				</ul>
@@ -135,10 +135,8 @@
 </div>
 
 
-<div class="overlay">
-	<div class="modal">
-		<div class="container"></div>
-	</div>
+<div id="shift-modal" class="modal">
+	<div class="container"></div>
 </div>
 
 <script src="js/main.js" charset="utf-8"></script>
