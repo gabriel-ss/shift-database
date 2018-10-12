@@ -495,6 +495,9 @@ tr.dark, table.dark {
 /* Helpers
 __________________________________________________ */
 
+.active {
+	display: block;
+}
 
 .container {
 	width: 85%;

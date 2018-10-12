@@ -35,8 +35,7 @@ const Modal = (() => {
 
 		hide() {
 
-			this._overlay.style = "display: none";
-			document.body.style = "overflow: auto";
+			this._overlay.classList.remove("active");
 			this._isVisible = false;
 
 		},
@@ -44,8 +43,7 @@ const Modal = (() => {
 
 		show() {
 
-			this._overlay.style = "display: block";
-			document.body.style = "overflow: hidden";
+			this._overlay.classList.add("active");
 			this._isVisible = true;
 
 		},

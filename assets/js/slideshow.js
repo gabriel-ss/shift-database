@@ -63,18 +63,18 @@ const Slideshow = (() => {
 
 		next() {
 
-			this._slides[this._currentSlide++].style = "display: none;";
+			this._slides[this._currentSlide++].classList.remove("active");
 			this._currentSlide %= this._slides.length;
-			this._slides[this._currentSlide].style = "display: block;";
+			this._slides[this._currentSlide].classList.add("active");
 
 		},
 
 
 		previous() {
 
-			this._slides[this._currentSlide].style = "display: none;";
+			this._slides[this._currentSlide].classList.remove("active");
 			this._currentSlide = this._currentSlide || this._slides.length;
-			this._slides[--this._currentSlide].style = "display: block;";
+			this._slides[--this._currentSlide].classList.add("active");
 
 		},
 
