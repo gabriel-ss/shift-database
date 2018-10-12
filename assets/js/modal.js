@@ -1,4 +1,4 @@
-import Component from './component.js';
+import Component from "./component.js";
 
 
 /**
@@ -19,12 +19,13 @@ const Modal = (() => {
 		element.parentNode.replaceChild(this._overlay, element);
 		this._overlay.appendChild(element);
 
-		this._overlay.addEventListener("click", (event) => {
-			if (event.target == this._overlay)
-				this.hide();
+		this._overlay.addEventListener("click", event => {
+
+			if (event.target === this._overlay) this.hide();
+
 		});
 
-	}
+	};
 
 
 	Modal.selector = ".modal";
@@ -32,31 +33,27 @@ const Modal = (() => {
 
 	Modal.prototype = {
 
-		/**
-		 * Display the modal and the overlay
-		 */
-		show: function() {
+		hide() {
+
+			this._overlay.style = "display: none";
+			document.body.style = "overflow: auto";
+			this._isVisible = false;
+
+		},
+
+
+		show() {
 
 			this._overlay.style = "display: block";
 			document.body.style = "overflow: hidden";
 			this._isVisible = true;
+
 		},
 
-
-		/**
-		 * Hide the modal and the overlay
-		 */
-		hide: function() {
-			
-			this._overlay.style = "display: none";
-			document.body.style = "overflow: auto";
-			this._isVisible = false;
-		},
-
-	}
+	};
 
 	return Modal;
 
-})()
+})();
 
 export default Modal;
