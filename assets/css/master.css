@@ -161,7 +161,7 @@ input {
 	padding: var(--input-padding);
 	border-radius: var(--radius-small);
 	color: var(--default-text-color);
-	margin: .5em 0 .25em;
+	margin-bottom: 1em;
 }
 
 
@@ -175,10 +175,13 @@ input:focus {
 }
 
 label {
-	margin: 1em 0 .75em;
 	width: 100%;
 	box-sizing: border-box;
-	display: block;
+	display: inline-block;
+}
+
+label>input {
+	margin-top: .5em;
 }
 
 /* Buttons
@@ -193,7 +196,7 @@ input[type="button"]  {
 	padding: var(--input-padding);
 	border-radius: var(--radius-small);
 	color: var(--default-text-color);
-	margin: .5em 0 .25em;
+	margin-bottom: 1em;
 }
 
 button:focus,
@@ -214,6 +217,7 @@ __________________________________________________ */
 table {
 	border-collapse: collapse;
 	width: 100%;
+	margin-bottom: 1em;
 }
 
 th, td {
@@ -265,7 +269,7 @@ __________________________________________________ */
 	padding: .75em 1em;
 	border: solid 1px var(--light-overlay);
 	border-radius: var(--radius-small);
-	margin: 0 0 1em;
+	margin-bottom: 1em;
 	color: var(--dark-text);
 }
 
@@ -287,13 +291,14 @@ __________________________________________________ */
 /* TODO: Add fade effect */
 
 .modal {
+	position: relative;
 	overflow: hidden;
 	margin: 2em auto;
 	max-width: 40em;
 	width: 60%;
 	background-color: var(--default-color);
 	z-index: 1;
-	padding: .75em 2em;
+	padding: .5em 0;
 	border-radius: var(--radius-big);
 	animation:slideDown .5s;
 }
