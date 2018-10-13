@@ -32,16 +32,14 @@
 </style>
 <div class="container">
 	<div class="card light">
-		<header>
-			<nav class="header">
-				<ul class="tab-group">
-					<li class="tab-title" data-tab-target="account">Account</li>
-					<li class="tab-title" data-tab-target="shifts">Shift Subscription</li>
-					<li class="tab-title" data-tab-target="list">My Shifts</li>
-				</ul>
-			</nav>
-		</header>
-		<section id="account" class="tab-content">
+		<nav class="header">
+			<ul class="tab-group">
+				<li class="tab-title" data-tab-target="account">Account</li>
+				<li class="tab-title" data-tab-target="shifts">Shift Subscription</li>
+				<li class="tab-title" data-tab-target="list">My Shifts</li>
+			</ul>
+		</nav>
+		<section id="account" class="body tab-content">
 
 			<div id="account-details">
 				<h1>User data</h1>
@@ -112,7 +110,7 @@
 					</div>
 				</div>
 		</section>
-		<section id="shifts" class="tab-content">
+		<section id="shifts" class="body tab-content">
 			<table class="" id="shift-table">
 			</table>
 			<div class="slideshow" style="position: relative">
@@ -123,7 +121,7 @@
 			<div class="container ">
 			</div>
 		</section>
-		<section id="list" class="tab-content">
+		<section id="list" class="body tab-content">
 			<div class="container">
 				<?php // TODO: Update dynamically ?>
 				<?php	$table = new ShiftTable($connection); ?>
