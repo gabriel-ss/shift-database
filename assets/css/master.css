@@ -371,6 +371,7 @@ __________________________________________________ */
 	width: calc(100% - 70px);
 	height: inherit;
 	overflow: auto;
+	display: none;
 }
 .prev,
 .next {

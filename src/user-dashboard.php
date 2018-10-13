@@ -58,14 +58,14 @@
 			<div id="message-board">
 				<h2 style="text-align:center; margin: 0;">Messages</h2>
 				<div id="messages" class="slideshow">
-					<div class="slideshow-content">
+					<div class="slideshow-content active">
 						<p>&quot;O Deep Thought Computer,&quot; he said, &quot;the task we have designed you to perform is this. We want you to tell us ...&quot; he paused, &quot;... the Answer!&quot;</p>
 						<p>&quot;The answer?&quot; said Deep Thought. &quot;The answer to what?&quot;</p>
 						<p>&quot;Life!&quot; urged Fook.</p>
 						<p>&quot;The Universe!&quot; said Lunkwill.</p>
 						<p>&quot;Everything!&quot; they said in chorus. </p>
 					</div>
-					<div class="slideshow-content ocult">
+					<div class="slideshow-content">
 						<p>&quot;Tricky,&quot; he said finally.</p>
 						<p>&quot;But can you do it?&quot;</p>
 						<p>Again, a significant pause.</p>
@@ -74,7 +74,7 @@
 						<p>&quot;A simple answer?&quot; added Lunkwill.</p>
 						<p>&quot;Yes,&quot; said Deep Thought. &quot;Life, the Universe, and Everything. There is an answer. But,&quot; he added, &quot;I'll have to think about it.&quot;</p>
 					</div>
-					<div class="slideshow-content ocult">
+					<div class="slideshow-content">
 						<p>There was a moment's expectant pause whilst panels slowly came to life on the front of the console. Lights flashed on and off experimentally and settled down into a businesslike pattern. A soft low hum came from the communication channel.</p>
 						<p>&quot;Good morning,&quot; said Deep Thought at last.</p>
 						<p>&quot;Er ... Good morning, O Deep Thought,&quot; said Loonquawl nervously, &quot;do you have ... er, that is ...&quot;</p>
@@ -89,7 +89,7 @@
 						<p>&quot;Now?&quot;</p>
 						<p>&quot;Now,&quot; said Deep Thought.</p>
 					</div>
-					<div class="slideshow-content ocult">
+					<div class="slideshow-content">
 						<p>They both licked their dry lips.</p>
 						<p>&quot;Though I don't think,&quot; added Deep Thought, &quot;that you're going to like it.&quot;</p>
 						<p>&quot;Doesn't matter!&quot; said Phouchg. &quot;We must know it! Now!&quot;</p>
