@@ -134,7 +134,8 @@
 
 
 <div id="shift-modal" class="modal">
-	<div class="container"></div>
+	<div class="header">Shift Details</div>
+	<div class="body"></div>
 </div>
 
 <script src="js/main.js" charset="utf-8"></script>

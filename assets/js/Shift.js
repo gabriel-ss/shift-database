@@ -46,25 +46,26 @@ export default function Shift(shiftId) {
 				shiftDetails[1] ? "Unsubscribe" : "Subscribe";
 
 			// Sets the content of the modal.
-			shiftModal.element.innerHTML =
-				`<h1>Shift Details</h1>
-			<div class="half-width">
-				<h2>Date:</h2>
-				<p>${modalData.date.toLocaleDateString()}</p>
-			</div>
-			<div class="half-width">
-				<h2>Start Time:</h2>
-				<p>${modalData.date.toTimeString().substring(0, 5)}</p>
-			</div>
-			<div class="half-width">
-				<h2>Capacity:</h2>
-				${modalData.user_count}
-			</div>
-			<div class="half-width">
-			<h2>Subscriptions:</h2>
-				${modalData.subscriptions}
-			</div>
-			<button class=" float-right">${modalData.buttonContent}</button>`;
+			shiftModal.element.querySelector(".body").innerHTML =
+				`
+				<div class="half-width">
+					<strong>Date:</strong>
+					<p>${modalData.date.toLocaleDateString()}</p>
+				</div>
+				<div class="half-width">
+					<strong>Start Time:</strong>
+					<p>${modalData.date.toTimeString().substring(0, 5)}</p>
+				</div>
+				<div class="half-width">
+					<strong>Capacity:</strong>
+					${modalData.user_count}
+				</div>
+				<div class="half-width">
+					<strong>Subscriptions:</strong>
+					${modalData.subscriptions}
+				</div>
+				<button class=" float-right">${modalData.buttonContent}</button>
+			`;
 
 			// Adds a listener to the button to subscribe and call the callback
 			// on click.

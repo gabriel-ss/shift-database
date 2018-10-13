@@ -19,11 +19,16 @@ const Modal = (() => {
 		element.parentNode.replaceChild(this._overlay, element);
 		this._overlay.appendChild(element);
 
-		this._overlay.addEventListener("click", event => {
+		this._overlay.addEventListener("click",
+			event => event.target === this._overlay && this.hide());
 
-			if (event.target === this._overlay) this.hide();
 
-		});
+		document
+			.querySelectorAll(`[data-toggles='${element.id}']`)
+			.forEach(trigger =>
+				trigger.addEventListener("click", () => this.toggle()));
+
+		this.addCloseButton();
 
 	};
 
@@ -32,6 +37,16 @@ const Modal = (() => {
 
 
 	Modal.prototype = {
+
+		addCloseButton() {
+
+			const closeButton = document.createElement("button");
+
+			closeButton.classList.add("close");
+			closeButton.addEventListener("click", () => this.hide());
+			this._overlay.querySelector(".modal").appendChild(closeButton);
+
+		},
 
 		hide() {
 
@@ -45,6 +60,12 @@ const Modal = (() => {
 
 			this._overlay.classList.add("active");
 			this._isVisible = true;
+
+		},
+
+		toggle() {
+
+			this._isVisible = this._overlay.classList.toggle("active");
 
 		},
 

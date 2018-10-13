@@ -211,6 +211,20 @@ input[type="button"]:focus{
 	transition-duration: var(--trasition-short);
 }
 
+button.close {
+	border: none;
+	box-shadow: none;
+}
+
+button.close:hover {
+	color: var(--primary-color-alt);
+}
+
+button.close::before {
+	content: "\2715";
+	font-size: 1.5em;
+}
+
 /* Tables
 __________________________________________________ */
 
@@ -303,6 +317,26 @@ __________________________________________________ */
 	animation:slideDown .5s;
 }
 
+.modal>button.close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: .75em;
+	padding: .75em;
+}
+
+.modal>.header {
+	border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+	padding: .75em 1.5em;
+	font-size: 1.25em;
+	font-weight: bold;
+	margin-bottom: 1em;
+}
+
+.modal>.body {
+	padding: .75em 1.5em;
+	margin-bottom: 1em;
+}
 
 @keyframes fadeIn {
   0% {
