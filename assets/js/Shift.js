@@ -64,12 +64,12 @@ export default function Shift(shiftId) {
 					<strong>Subscriptions:</strong>
 					${modalData.subscriptions}
 				</div>
-				<button class=" float-right">${modalData.buttonContent}</button>
+				<button id="subscribe-button" class="float-right">${modalData.buttonContent}</button>
 			`;
 
 			// Adds a listener to the button to subscribe and call the callback
 			// on click.
-			shiftModal.element.querySelector("button")
+			shiftModal.element.querySelector("#subscribe-button")
 				.addEventListener("click", () => {
 
 					this.subscribe();
