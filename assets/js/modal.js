@@ -41,10 +41,11 @@ const Modal = (() => {
 		addCloseButton() {
 
 			const closeButton = document.createElement("button");
+			const modal = this._overlay.querySelector(".modal");
 
 			closeButton.classList.add("close");
 			closeButton.addEventListener("click", () => this.hide());
-			this._overlay.querySelector(".modal").appendChild(closeButton);
+			modal.insertBefore(closeButton, modal.firstChild);
 
 		},
 
