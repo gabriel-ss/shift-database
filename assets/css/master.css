@@ -151,10 +151,11 @@ nav li {
 __________________________________________________ */
 
 form {
-	margin: 3em 0em 1em;
+	margin: 2em 0em 1em;
 }
 
-input {
+input,
+textarea {
 	border: solid var(--primary-color-alt);
 	border-width: var(--input-border);
 	background-color: var(--default-color);
@@ -165,7 +166,8 @@ input {
 }
 
 
-input:focus {
+input:focus,
+textarea:focus {
 	border: solid var(--primary-color);
 	border-width: var(--input-border);
 	box-shadow: var(--input-focus-shadow) var(--primary-color);
@@ -214,6 +216,8 @@ input[type="button"]:focus{
 button.close {
 	border: none;
 	box-shadow: none;
+	background-color: inherit;
+	color: inherit;
 }
 
 button.close:hover {
