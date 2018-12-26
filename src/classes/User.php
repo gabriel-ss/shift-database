@@ -284,7 +284,7 @@ class User
 
 	/**
 	 * Returns a string that represents users access level if multiple levels
-	 * arebeing used. Otherwise returns false
+	 * are being used. Otherwise returns false
 	 *
 	 * @return string
 	 */
