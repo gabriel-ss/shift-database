@@ -12,5 +12,5 @@ session_start();
 
 
 $connection = new PDO("mysql:host=$host;dbname=$dbname", $dbuser, $password);
-$connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-$user = new User($connection, $_SESSION["user_id"]);
+$userDataAccessor = new UserDataAccessor($connection);
+$user = User::restoreSession($userDataAccessor, $_SESSION["user_id"]);

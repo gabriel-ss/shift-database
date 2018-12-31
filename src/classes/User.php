@@ -1,170 +1,183 @@
 <?php
 
+use UserDataInterface as UD;
+
 /**
- * Handles user sessions in SQL databases
+ * The base class to represent users. Instances of it must be obtained by
+ * calling the static methods login and restoreSession, both of which
+ * instantiate the correct child class of User to the corresponding access
+ * level.
+ *
+ * The user ID is always passed by reference, making possible to implement
+ * persistence by passing a variable that will be carried through page reloads.
  */
 class User
 {
-	/**
-	 * Stores the connection with the database.
-	 *
-	 * @var PDO
-	 */
-	private $connection;
+
+	private $dataInterface;
 
 	/**
-	 * Associative array that stores the name of the tables in user database.
+	 * The numerical identifier that univocally represents the user stored as a
+	 * string in a variable received by reference.
 	 *
-	 * @var array
-	 */
-	private $dbTables = [
-		"userTable" => "users",
-		"accessTable" => "access_levels"
-	];
-
-	/**
-	 * Associative array that stores the column names of the table that holds
-	 * user information.
-	 *
-	 * @var array
-	 */
-	private $userTable = [
-		"id" => "user_id",
-		"email" => "email",
-		"name" => "name",
-		"password" => "password",
-		"accessLevel" => "access_level"
-	];
-
-	/**
-	 * Associative array that stores the column names of the table that holds
-	 * information about the access levels.
-	 *
-	 * @var array
-	 */
-	private $accessTable = [
-		"id" => "level_id",
-		"level" => "level"
-	];
-
-	/**
-	 * A number that identifies the user in the database.
-	 *
-	 * @var int
+	 * @var string
 	 */
 	private $id;
 
 	/**
-	 * The name of the user. Set by the method retrieveData.
+	 * The name of the user.
 	 *
 	 * @var string
 	 */
 	private $name;
 
 	/**
-	 * The name of the email. Set by the method retrieveData.
+	 * The name of the email.
 	 *
 	 * @var string
 	 */
 	private $email;
 
 	/**
-	 * A string that identifies the user's access level. Set by the method
-	 * retrieveData.
+	 * A string that identifies the user's access level.
 	 *
 	 * @var string
 	 */
 	private $accessLevel;
 
+
 	/**
- 	 * Receives a PDO connection as the first argument. The constructor can also
-	 * take an user id as an optional parameter. In this case the class will
-	 * properly handle the user id and update the passed variable making
-	 * possible to use PHP sessions to store the user's id. It's also possible
-	 * to define the names of the tables and their columns passing they in
-	 * associative arrays
+	 * The base constructor of users. Should be used only inside of the static
+	 * methods login and restoreSession.
 	 *
-	 * @param PDO $connection A PDO object connected to the users database
+	 * @param UserDataInterface $dataInterface An object to intermediate the
+	 * access to user data
 	 *
-	 * @param int $userId Optional. If a variable is passed here it will be
-	 * modified as needed, such as during login.
+	 * @param string            $userId        A variable passed by reference to
+	 * forward the reference received by the factory method.
 	 *
-	 * @param array $dbTables An optional parameter that can be used to set the
-	 * name of tables on the database. Defaults are:
-	 * "userTable" => "users",
-	 * "accessTable" => "access_levels"
+	 * @param string            $name          User's name
 	 *
-	 * @param array $userTable An optional parameter that can be used to set the
-	 * column names in the table that stores user data. Defaults are:
-	 * | Key           | Default Value  |
-	 * |---------------|----------------|
-	 * | "id"          | "user_id"      |
-	 * | "email"       | "email"        |
-	 * | "name"        | "name"         |
-	 * | "password"    | "password"     |
-	 * | "accessLevel" | "access_level" |
+	 * @param string            $email         User's email
 	 *
-	 * @param array $accessTable An optional parameter that can be used to set
-	 * the column names in the table that stores access level data. If null is
-	 * passed access levels will not be handled by the class. Defaults are:
-	 * | Key     | Default Value |
-	 * |---------|---------------|
-	 * | "id"    | "level_id",   |
-	 * | "level" | "level"       |
+	 * @param string            $accessLevel   User's access level
 	 */
-	public function __construct($connection, &$userId = null, $dbTables = [], $userTable = [], $accessTable = [])
-	{
-		$this->connection = $connection;
-		$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+	protected function __construct(
+		UserDataInterface $dataInterface,
+		string &$userId,
+		string $name,
+		string $email,
+		string $accessLevel
+	) {
+
+		$this->dataInterface = $dataInterface;
 		$this->id = &$userId;
+		$this->name = $name;
+		$this->email = $email;
+		$this->accessLevel = $accessLevel;
 
-		foreach ($dbTables as $column => $columnName) {
-			if (isset($this->dbTables[$column]))
-				$this->dbTables[$column] = $columnName;
-		}
-
-		foreach ($userTable as $column => $columnName) {
-			if (isset($this->userTable[$column]))
-				$this->userTable[$column] = $columnName;
-		}
-
-		if ($accessTable === null) {
-			unset($this->accessTable);
-			unset($this->userTable["accessLevel"]);
-		} else {
-			foreach ($accessTable as $column => $columnName) {
-				if (isset($this->accessTable[$column]))
-				$this->accessTable[$column] = $columnName;
-			}
-		}
 	}
+
 
 	/**
-	 * Fills the properties of the object with the data in the user
-	 * database. To avoid unnecessary connections to the database they are only
-	 * populated when a get method is invoked
+	 * Method to restore the session of an user that is already logged in.
+	 * Returns the same object that would be returned by calling the login method
+	 * with the email and the password of the user whose id was passed by
+	 * reference. If the id doesn't match any user, returns null.
+	 *
+	 * @param  UserDataInterface $dataInterface A variable passed by reference to
+	 * forward the reference received by the factory method.
+	 *
+	 * @param  ?string           $userId        A variable passed by reference
+	 * containing the user ID.
+	 *
+	 * @return User                             An instance of a child of User
 	 */
-	private function retrieveData()
-	{
-		$query = $this->connection->prepare( (isset($this->accessTable) ?
+	public static function restoreSession(
+		UserDataInterface $dataInterface,
+		?string &$userId
+	): ?User {
+		if (!$userId) return null;
 
-			"SELECT {$this->userTable["email"]}, {$this->userTable["name"]},
-			{$this->accessTable["level"]} FROM {$this->dbTables['userTable']}
-			INNER JOIN {$this->dbTables["accessTable"]} ON
-			{$this->dbTables["accessTable"]}.{$this->accessTable["id"]} =
-			{$this->dbTables["userTable"]}.{$this->userTable["accessLevel"]}
-			WHERE {$this->userTable["id"]}=?"
-			:
-			"SELECT {$this->userTable["email"]}, {$this->userTable["name"]},
-			FROM {$this->dbTables['userTable']} WHERE {$this->userTable["id"]}=?"
-		));
-		$query->execute([$this->id]);
-		$result = $query->fetch();
+		$userData = $dataInterface->findOne(
+			[UD::ID => $userId]
+		);
 
-		$this->email = $result[$this->userTable["email"]];
-		$this->name = $result[$this->userTable["name"]];
-		$this->accessLevel = $result[$this->accessTable["level"]];
+		[
+			UD::EMAIL => $email,
+			UD::NAME => $name,
+			UD::ACCESS_LEVEL => $accessLevel,
+		] = $userData;
+
+		if ($accessLevel == "user")
+			return new User($dataInterface, $userId, $name, $email, $accessLevel);
+
+		if ($accessLevel == "admin")
+			return new Admin($dataInterface, $userId, $name, $email, $accessLevel);
+
 	}
+
+
+	/**
+	 * Identifies a user by checking the given email and then verify the
+	 * password. Throws an error if the email does not exists in the database or
+	 * if the password is incorrect. If the login is successful returns an object
+	 * that is an instance of a class that extends User class chosen according to
+	 * the user's access level.
+	 *
+	 * The variable passed by reference here to store the user ID can be used to
+	 * call the static method restoreSession to recreate the object returned from
+	 * a call of this method.
+	 *
+	 * @param  UserDataInterface $dataInterface An object to intermediate the
+	 * access to user data
+	 *
+	 * @param  ?string           $userId        A variable passed by reference to
+	 * store the user ID. Can be used in conjunction with the static method
+	 * restoreSession to implement persistence.
+	 *
+	 * @param  string            $email         User's email
+	 *
+	 * @param  string            $password      Plain user's password
+	 *
+	 * @return User                             An instance of a child of User
+	 */
+	public static function login(
+		UserDataInterface $dataInterface,
+		?string &$userId,
+		string $email,
+		string $password
+	): User {
+
+		$userData = $dataInterface->findOne(
+			[UD::EMAIL => $email]
+		);
+
+		// TODO: Change those exceptions
+		if (!$userData)
+			throw new Exception("User not found in the database");
+
+		[
+			UD::ID => $id,
+			UD::EMAIL => $email,
+			UD::NAME => $name,
+			UD::PASSWORD => $passwordHash,
+			UD::ACCESS_LEVEL => $accessLevel,
+		] = $userData;
+
+		if (!password_verify($password, $passwordHash))
+			throw new Exception("Incorrect password");
+
+		$userId = $id;
+
+		if ($accessLevel == "user")
+			return new User($dataInterface, $userId, $name, $email, $accessLevel);
+
+		if ($accessLevel == "admin")
+			return new Admin($dataInterface, $userId, $name, $email, $accessLevel);
+
+	}
+
 
 	/**
 	 * Takes an email, a password and a name as arguments and tries to create a
@@ -178,248 +191,136 @@ class User
 	 *
 	 * @param string $name User's name
 	 */
-	public function register($email, $password, $name)
-	{
+	public static function register(
+		UserDataInterface $dataInterface,
+		string $email,
+		string $password,
+		string $name
+	): void {
+
 		if(!filter_var($email, FILTER_VALIDATE_EMAIL))
 			throw new Exception("Invalid Email");
 
-		$query = $this->connection->prepare(
-			"SELECT {$this->userTable["id"]} FROM {$this->dbTables['userTable']}
-			WHERE {$this->userTable["email"]}=?"
-		);
-
-		$query->execute([$email]);
-
-		if ($query->rowCount()) {
+		// COMBAK: Maybe throwing an exception isn't ideal
+		if ($dataInterface->findOne([UD::EMAIL => $email]))
 			throw new Exception("The email already exists in database");
-		}
 
-		$password = password_hash($password, PASSWORD_DEFAULT);
 
-		$query = $this->connection->prepare(
-			"INSERT INTO {$this->dbTables['userTable']}
-			({$this->userTable["email"]}, {$this->userTable["name"]},
-			{$this->userTable["password"]}) VALUES (?, ?, ?)"
-		);
+		$dataInterface->insert([
+			UD::EMAIL => $email,
+			UD::NAME => $name,
+			UD::PASSWORD => password_hash($password, PASSWORD_DEFAULT),
+		]);
 
-		$query->execute([$email, $name, $password]);
 	}
 
-	/**
-	 * Identifies a user by checking the given email and then verify the
-	 * password. Throws an error if the email does not exists in the database or
-	 * the password is incorrect
-	 *
-	 * @param string $email User's Email
-	 *
-	 * @param string $password Plain user's password
-	 */
-	public function login($email, $password)
-	{
-		$query = $this->connection->prepare( (isset($this->accessTable) ?
-
-			"SELECT {$this->userTable["id"]}, {$this->userTable["name"]},
-			{$this->userTable["password"]}, {$this->accessTable["level"]}
-			FROM {$this->dbTables['userTable']} INNER JOIN
-			{$this->dbTables["accessTable"]} ON
-			{$this->dbTables["accessTable"]}.{$this->accessTable["id"]} =
-			{$this->dbTables["userTable"]}.{$this->userTable["accessLevel"]}
-			WHERE {$this->userTable["email"]}=?"
-			:
-			"SELECT {$this->userTable["id"]}, {$this->userTable["name"]},
-			{$this->userTable["password"]} FROM {$this->dbTables['userTable']}
-			WHERE {$this->userTable["email"]}=?"
-		));
-
-		$query->execute([$email]);
-
-		if (!$query->rowCount())
-			throw new Exception("User not found in the database");
-
-		$userData = $query->fetch();
-
-		if (!password_verify($password, $userData["password"]))
-			throw new Exception("Incorrect password");
-
-
-		$this->id = $userData["user_id"];
-		$this->name = $userData[$this->userTable["name"]];
-		$this->accessLevel = $userData[$this->accessTable["level"]];
-		$this->email = $email;
-	}
-
-	/**
-	 * Returns true if user is logged or false if it's not
-	 *
-	 * @return bool
-	 */
-	public function isLogged()
-	{
-		return $this->id ? true : false;
-	}
 
 	/**
 	 * Returns user's full name
 	 *
 	 * @return string
 	 */
-	public function getName()
-	{
-		if (!isset($this->name))
-			$this->retrieveData();
+	public function getName(): string {
 		return $this->name;
 	}
+
 
 	/**
 	 * Returns user's email
 	 *
 	 * @return string
 	 */
-	public function getEmail()
-	{
-		if (!isset($this->email))
-			$this->retrieveData();
+	public function getEmail(): string {
 		return $this->email;
 	}
 
+
 	/**
-	 * Returns a string that represents users access level if multiple levels
-	 * are being used. Otherwise returns false
+	 * Returns a string that represents user's access level.
 	 *
 	 * @return string
 	 */
-	public function getAccessLevel()
-	{
-		if (!isset($this->accessTable))
-			return false;
-		if (!isset($this->accessLevel))
-			$this->retrieveData();
+	public function getAccessLevel(): string {
 		return $this->accessLevel;
 	}
 
+
 	/**
- 	 * Modifies the user's name in the database and updates the object's property
+	 * Modifies the user's name in the database and updates the object's property
 	 *
 	 * @param string $name User's new name
- 	 */
-	public function modifyName($name)
-	{
-		$query = $this->connection->prepare(
-			"UPDATE {$this->dbTables['userTable']} SET
-			{$this->userTable["name"]}=? WHERE {$this->userTable["id"]}=?"
+	 */
+	public function modifyName(string $name): void {
+		$this->dataInterface->update(
+			[UD::ID => $this->id],
+			[UD::NAME => $name]
 		);
 
-		$query->execute([$name, $this->id]);
 		$this->name = $name;
 	}
 
-	/**
- 	 * Modifies the user's email in the database and updates the object's property
-	 *
-	 * @param string $email User's new email
- 	 */
-	public function modifyEmail($email)
-	{
-		if(!filter_var($email, FILTER_VALIDATE_EMAIL))
-			throw new Exception("Invalid Email");
-
-		$query = $this->connection->prepare(
-			"UPDATE {$this->dbTables['userTable']} SET
-			{$this->userTable["email"]}=? WHERE {$this->userTable["id"]}=?"
-		);
-
-		$query->execute([$email, $this->id]);
-		$this->email = $email;
-	}
 
 	/**
- 	 * Modifies the user's password in the database
-	 *
-	 * @param string $email User's new plain password
- 	 */
-	public function modifyPassword($password)
-	{
-		$password = password_hash($password, PASSWORD_DEFAULT);
-
-		$query = $this->connection->prepare(
-			"UPDATE {$this->dbTables['userTable']} SET
-			{$this->userTable["password"]}=? WHERE {$this->userTable["id"]}=?"
-		);
-
-		$query->execute([$password, $this->id]);
-	}
-
-	/**
- 	 * Modifies the user's access level in the database and updates the object's
+	 * Modifies the user's email in the database and updates the object's
 	 * property
 	 *
 	 * @param string $email User's new email
- 	 */
-	public function modifyAccessLevel($accessLevel)
-	{
-		$query = $this->connection->prepare(
-			"SELECT {$this->accessTable["id"]} FROM
-			{$this->dbTables['accessTable']} WHERE {$this->accessTable["level"]}=?"
+	 */
+	public function modifyEmail(string $email): void {
+		if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+			throw new Exception("Invalid Email");
+
+
+		$this->dataInterface->update(
+			[UD::ID => $this->id],
+			[UD::EMAIL => $email]
 		);
 
-		$query->execute([$accessLevel]);
+		$this->email = $email;
+	}
 
-		if (!$query->rowCount()) {
-			throw new Exception("Invalid access level");
-		}
 
-		$accessId = $query->fetch()[$this->accessTable["id"]];
+	/**
+	 * Modifies the user's password in the database
+	 *
+	 * @param string $email User's new plain password
+	 */
+	public function modifyPassword(string $password): void {
+		$this->dataInterface->update(
+			[UD::ID => $this->id],
+			[UD::PASSWORD => password_hash($password, PASSWORD_DEFAULT)]
+		);
+	}
 
-		$query = $this->connection->prepare(
-			"UPDATE {$this->dbTables['userTable']} SET
-			{$this->userTable["accessLevel"]}=? WHERE {$this->userTable["id"]}=?"
+
+	/**
+	 * Modifies the user's access level in the database and updates the object's
+	 * property
+	 *
+	 * @param string $email User's new email
+	 */
+	public function modifyAccessLevel(string $accessLevel): void {
+
+		// TODO: Validate access level
+
+		$this->dataInterface->update(
+			[UD::ID => $this->id],
+			[UD::ACCESS_LEVEL => $accessLevel]
 		);
 
-		$query->execute([$accessId, $this->id]);
 		$this->accessLevel = $accessLevel;
 	}
 
+
 	/**
-	 * Cleans object's properties and destroies current session
+	 * Cleans object's properties and destroys current session
 	 */
-	public function logout()
-	{
+	public function logout(): void {
 		$this->id = null;
 		$this->name = null;
 		$this->email = null;
 		$this->accessLevel = null;
 		session_destroy();
-	}
-
-	/* Admin Utilities
-	__________________________________________________ */
-
-
-	public function sudo($id)
-	{
-		return new User($this->connection, $id, $this->dbTables, $this->userTable, $this->accessTable);
-	}
-
-	/**
-	 * Fetch data about the users from the database and returns an associative
-	 * array containing id, email, name and access level from each user.
-	 *
-	 * @return array Array containing data about each user. The keys of the array
-	 * are the name of the corresponding column in the database.
-	 */
-	public function getUserList()
-	{
-		$query = $this->connection->prepare(
-			"SELECT {$this->userTable["id"]}, {$this->userTable["email"]},
-			{$this->userTable["name"]}, {$this->accessTable["level"]}
-			FROM	{$this->dbTables["userTable"]} LEFT JOIN
-			{$this->dbTables["accessTable"]} ON
-			{$this->dbTables["accessTable"]}.{$this->accessTable["id"]} =
-			{$this->dbTables["userTable"]}.{$this->userTable["accessLevel"]}
-			ORDER BY {$this->userTable["name"]};"
-		);
-		$query->execute();
-		return $query->fetchAll();
 	}
 
 
