@@ -93,43 +93,62 @@ class UserDataAccessor implements UserDataInterface
 	 * defined in the UserDataInterface to represent a field of the user entry
 	 * and the value is the value to be matched.
 	 *
+	 * @param  array  $fields  An ordered array where each value is one of the
+	 * constants defined in the UserDataInterface to represent a field of the
+	 * user entry. Define which fields will be returned and in which order.
+	 *
 	 * @return string
 	 */
-	private static function queryUserData(array $filters): string {
+	private static function queryUserData(array $filters, array $fields): string {
+
+		$mask = array_map(function($column) {
+			return $column == self::ACCESS_LEVEL ?
+				self::ACCESS_COLUMNS['level'] :
+				self::USER_COLUMNS[$column];
+		}, $fields);
 
 		return
 			'SELECT ' .
-				self::USER_COLUMNS[self::ID] . ', ' .
-				self::USER_COLUMNS[self::EMAIL] . ', ' .
-				self::USER_COLUMNS[self::NAME] . ', ' .
-				self::USER_COLUMNS[self::PASSWORD] . ', ' .
-				self::ACCESS_COLUMNS['level'] . ' ' .
+				implode(', ', $mask) . ' ' .
 			'FROM ' . self::DB_TABLES['userTable'] . ' ' .
 			'INNER JOIN ' . self::DB_TABLES['accessTable'] . ' ON ' .
 				self::DB_TABLES['userTable'] . '.' .
 				self::USER_COLUMNS[self::ACCESS_LEVEL] . ' = ' .
 				self::DB_TABLES['accessTable'] . '.' .
 				self::ACCESS_COLUMNS['id'] . ' ' .
-			'WHERE ' . self::interpolateColumns($filters);
+			($filters ? ('WHERE ' . self::interpolateColumns($filters)) : "");
 
 	}
 
 
 	/**
 	 * Searches for elements that match the filters passed as arguments and
-	 * returns an array of arrays in which each field of the user data correspond
-	 * to the key specified by the constants defined in the UserDataInterface. If
-	 * no element matches the filters an empty array is returned.
+	 * returns an array of arrays containing the data from the user. The fields
+	 * in the return and their order are defined by the $fields array. If no
+	 * $fields argument is passed, the user data can be retrieved by using the
+	 * constants defined in UserDataInterface directly in the return of the
+	 * method. If no element matches the filters an empty array is returned.
 	 *
 	 * @param  array $filters An array where each key is one of the constants
 	 * defined in the UserDataInterface to represent a field of the user entry
 	 * and the value is the value to be matched.
 	 *
+	 * @param  array  $fields  An ordered array where each value is one of the
+	 * constants defined in the UserDataInterface to represent a field of the
+	 * user entry. Define which fields will be returned and in which order.
+	 *
 	 * @return array
 	 */
-	public function find(array $filters): array {
+	public function find(array $filters,  array $fields = [
+		self::ID,
+		self::EMAIL,
+		self::NAME,
+		self::PASSWORD,
+		self::ACCESS_LEVEL
+	]): array {
 
-		$query = $this->connection->prepare(self::queryUserData($filters));
+		$query =
+			$this->connection->prepare(self::queryUserData($filters, $fields));
 		$query->execute(array_values($filters));
 
 
@@ -139,19 +158,32 @@ class UserDataAccessor implements UserDataInterface
 
 	/**
 	 * Searches for the first element that match the filters passed as arguments
-	 * and returns an array in which each field of the user data correspond to
-	 * the key specified by the constants defined in the UserDataInterface. In
-	 * case of no matches an empty array is returned.
+	 * and returns an array containing the user's data. The fields in the
+	 * returned array and their order are defined by the $fields array. If no
+	 * $fields argument is passed, the user data can be retrieved by using the
+	 * constants defined in UserDataInterface directly in the return of the
+	 * method. In case of no matches an empty array is returned.
 	 *
 	 * @param  array $filters An array where each key is one of the constants
 	 * defined in the UserDataInterface to represent a field of the user entry
 	 * and the value is the value to be matched.
 	 *
+	 * @param  array  $fields  An ordered array where each value is one of the
+	 * constants defined in the UserDataInterface to represent a field of the
+	 * user entry. Define which fields will be returned and in which order.
+	 *
 	 * @return array
 	 */
-	public function findOne(array $filters): array {
+	public function findOne(array $filters, array $fields = [
+		self::ID,
+		self::EMAIL,
+		self::NAME,
+		self::PASSWORD,
+		self::ACCESS_LEVEL
+	]): array {
 
-		$query = $this->connection->prepare(self::queryUserData($filters));
+		$query =
+			$this->connection->prepare(self::queryUserData($filters, $fields));
 		$query->execute(array_values($filters));
 
 
