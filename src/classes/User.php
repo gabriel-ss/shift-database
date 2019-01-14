@@ -14,7 +14,7 @@ use UserDataInterface as UD;
 class User
 {
 
-	private $dataInterface;
+	protected $dataInterface;
 
 	/**
 	 * The numerical identifier that univocally represents the user stored as a
