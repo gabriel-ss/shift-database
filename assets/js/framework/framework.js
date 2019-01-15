@@ -45,4 +45,3 @@ const Framework = (() => {
 })();
 
 export default Framework;
-export {Modules};

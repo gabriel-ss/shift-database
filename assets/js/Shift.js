@@ -1,4 +1,4 @@
-import framework from "./index.js";
+import framework from "./framework/framework.js";
 
 /**
  * Represents a shift in the database.
