@@ -138,4 +138,4 @@
 	<div class="body"></div>
 </div>
 
-<script src="js/main.js" charset="utf-8"></script>
+<script src="js/master.js" charset="utf-8"></script>
