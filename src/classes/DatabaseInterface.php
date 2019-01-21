@@ -44,7 +44,25 @@ interface DatabaseInterface
 	 *
 	 * @return int           Number of elements affected
 	 */
-	public function insert(array $values): int;
+	public function insertOne(array $values): int;
+
+
+	/**
+	 * Receives an array of arrays where each one contain the information about
+	 * one of the entries to be inserted. The relation of value position in the
+	 * arrays contained in $values and the field in the database is defined in
+	 * the $fields Array.
+	 *
+	 * @param  array $fields An array specifing the relation between the order of
+	 * the values in the arrays in $values and the fields in the database.
+	 *
+	 * @param  array $values An ordered array of ordered arrays, each one
+	 * containing the information of one of the entries to be inserted into the
+	 * database.
+	 *
+	 * @return int           Number of entries affected
+	 */
+	public function insertMany(array $fields, array $values): int;
 
 
 	/**

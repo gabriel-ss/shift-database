@@ -198,11 +198,13 @@ class UserDataAccessor implements UserDataInterface
 	 *
 	 * @return int            Number of entries affected
 	 */
-	public function insert(array $values): int {
+	public function insertOne(array $values): int {
 
 		$columns = array_map(function($columnAlias) {
 			return self::USER_COLUMNS[$columnAlias];
 		}, array_keys($values));
+
+		$levelPosition = array_search(self::ACCESS_LEVEL, array_keys($values));
 
 
 		$queryString =	'INSERT INTO ' . self::DB_TABLES['userTable'] .
@@ -210,13 +212,60 @@ class UserDataAccessor implements UserDataInterface
 
 
 		$placeholders = array_fill(0, count($values), '?');
-		$placeholders[array_search(self::ACCESS_LEVEL, array_keys($values))] =
-			self::LEVEL_ID_QUERY;
+		$levelPosition !== false &&
+			$placeholders[$levelPosition] = self::LEVEL_ID_QUERY;
 
 		$queryString .= ' VALUES (' .	implode(', ', $placeholders) . ')';
 
 		$query = $this->connection->prepare($queryString);
 		$query->execute(array_values($values));
+
+
+		return $query->rowCount();
+
+	}
+
+
+	/**
+	 * Receives an array of arrays where each one contain the information about
+	 * one of the users to be inserted. The relation of value position in the
+	 * arrays contained in $values and the field in the database is defined in
+	 * the $fields Array.
+	 *
+	 * @param  array $fields An ordered array where each value is one of the
+	 * constants defined in the UserDataInterface to represent a field of the
+	 * user entry. Define how the arrays contained in $values will be inserted.
+	 *
+	 * @param  array $values An ordered array of ordered arrays, each one
+	 * containing the information of one of the users to be inserted into the
+	 * database.
+	 *
+	 * @return int           Number of entries affected
+	 */
+	public function insertMany(array $fields, array $values): int {
+
+		$columns = array_map(function($columnAlias) {
+			return self::USER_COLUMNS[$columnAlias];
+		}, $fields);
+
+		$levelPosition = array_search(self::ACCESS_LEVEL, $fields);
+
+		$queryString =	'INSERT INTO ' . self::DB_TABLES['userTable'] .
+			' (' . implode(', ', $columns) . ')';
+
+
+		$placeholders = array_fill(0, count($fields), '?');
+		$levelPosition !== false &&
+			$placeholders[$levelPosition] = self::LEVEL_ID_QUERY;
+		$placeholders = '(' . implode(', ', $placeholders) . ')';
+		$placeholders = str_repeat($placeholders, count($values) - 1) .
+			', ' . $placeholders;
+
+
+		$queryString .= ' VALUES ' . $placeholders;
+
+		$query = $this->connection->prepare($queryString);
+		$query->execute(array_merge(...$values));
 
 
 		return $query->rowCount();
