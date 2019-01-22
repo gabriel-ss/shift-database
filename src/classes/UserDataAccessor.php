@@ -258,8 +258,8 @@ class UserDataAccessor implements UserDataInterface
 		$levelPosition !== false &&
 			$placeholders[$levelPosition] = self::LEVEL_ID_QUERY;
 		$placeholders = '(' . implode(', ', $placeholders) . ')';
-		$placeholders = str_repeat($placeholders, count($values) - 1) .
-			', ' . $placeholders;
+		$placeholders = str_repeat("$placeholders, ", count($values) - 1) .
+			$placeholders;
 
 
 		$queryString .= ' VALUES ' . $placeholders;
