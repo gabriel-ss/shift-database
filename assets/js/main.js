@@ -3,6 +3,14 @@
 // import Slideshow from "./slideshow.js";
 import Framework from "./framework/framework.js";
 import ShiftTable from "./ShiftTable.js";
+import UserManagementUI from "./UserManagementUI.js";
 
-let shiftTable = new ShiftTable();
-shiftTable.updateTable();
+if (document.querySelector("#shift-table")) {
+
+	const shiftTable = new ShiftTable();
+
+	shiftTable.updateTable();
+
+}
+
+UserManagementUI.updateTable();
