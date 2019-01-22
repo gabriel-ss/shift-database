@@ -12,16 +12,17 @@ class Shift
 	 */
 	private $connection;
 
+
 	/**
 	 * Creates a representation of a shift.
 	 *
 	 * @param PDO $connection A PDO object connected to the shifts database.
 	 */
-	function __construct($connection)
-	{
+	public function __construct($connection) {
 		$this->connection = $connection;
 		$this->connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 	}
+
 
 	/**
 	 * Creates a new entry in the database representing a user subscription.
@@ -31,12 +32,12 @@ class Shift
 	 * @param int $shiftId The ID of the shift in which the user should be
 	 * subscribed.
 	 */
-	public function addShiftEntry($userId, $shiftId)
-	{
+	public function addShiftEntry($userId, $shiftId) {
 		$query = $this->connection->prepare("INSERT INTO shift_entries (user_id, shift_id )
 			VALUES (?, ?)");
 		$query->execute([$userId, $shiftId]);
 	}
+
 
 	/**
 	 * Removes an entry in the database representing a user subscription.
@@ -45,12 +46,12 @@ class Shift
 	 *
 	 * @param int $shiftId The shift ID on which the user must unsubscribe.
 	 */
-	public function removeShiftEntry($userId, $shiftId)
-	{
+	public function removeShiftEntry($userId, $shiftId) {
 		$query = $this->connection->prepare("DELETE FROM shift_entries where
 			user_id = ? AND shift_id = ?");
 		$query->execute([$userId, $shiftId]);
 	}
+
 
 	/**
 	 * Queries the database after information about the shift and returns an
@@ -61,8 +62,7 @@ class Shift
 	 * @return Array          An associative array containing the data returned
 	 * by the server
 	 */
-	public function getShiftDetails($shiftId)
-	{
+	public function getShiftDetails($shiftId) {
 		$query = $this->connection->prepare("SELECT date, user_count, count(user_id) AS subscriptions FROM shifts
 			LEFT JOIN shift_entries ON shifts.shift_id = shift_entries.shift_id
 			WHERE shifts.shift_id=?");
@@ -72,6 +72,7 @@ class Shift
 		$result["date"] = new DateTime($result["date"]);
 		return $result;
 	}
+
 
 	/**
 	 * Queries the database and returns a boolean indicating whether a
@@ -85,21 +86,20 @@ class Shift
 	 * @return boolean          Returns true if user is subscribed or false
 	 * otherwise.
 	 */
-	public function hasUser($userId, $shiftId)
-	{
+	public function hasUser($userId, $shiftId) {
 		$query = $this->connection->prepare("SELECT user_id FROM shift_entries
 			WHERE user_id = ? AND shift_id = ?");
 			$query->execute([$userId, $shiftId]);
 			return ($query->rowCount() ? true : false);
 	}
 
+
 	/**
 	 * Formats a modal in HTML containing info about the shift.
 	 *
 	 * @param  int $shiftId The ID of the shift.
 	 */
-	public function makeShiftModal($shiftId)
-	{
+	public function makeShiftModal($shiftId) {
 		$shiftDetails = $this->getShiftDetails($shiftId);
 		?>
 			<h1>Shift Details</h1>
@@ -126,5 +126,6 @@ class Shift
 			<div class="container"></div>
 		<?php
 	}
+
+
 }
- ?>
