@@ -1,4 +1,4 @@
-import framework from "./framework/framework.js";
+import widgets from "./widgets/widgets.js";
 
 /**
  * Represents a shift in the database.
@@ -23,7 +23,7 @@ export default function Shift(shiftId) {
 	 */
 	this.displayModal = callback => {
 
-		const [shiftModal] = framework("#shift-modal");
+		const [shiftModal] = widgets("#shift-modal");
 
 		/*
 		 * Calls the getInfo method to retrieve data about the shift and the

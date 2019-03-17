@@ -1,4 +1,4 @@
-import framework from "./framework/framework.js";
+import widgets from "./widgets/widgets.js";
 import User from "./User.js";
 
 const UserManagementUI = (() => {
@@ -20,7 +20,7 @@ const UserManagementUI = (() => {
 		});
 
 
-	const [modal] = framework("#user-update-modal");
+	const [modal] = widgets("#user-update-modal");
 
 	modal.inputs = {};
 	modal.buttons = {};
