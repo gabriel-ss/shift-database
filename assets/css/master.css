@@ -337,6 +337,14 @@ __________________________________________________ */
 	margin-bottom: 1em;
 }
 
+.modal>.footer {
+	display: flex;
+	justify-content: flex-end;
+	padding: .75em 1.5em .25em;
+	font-size: 1.25em;
+	font-weight: bold;
+}
+
 @keyframes fadeIn {
   0% {
     background: rgba(0, 0, 0, 0);
