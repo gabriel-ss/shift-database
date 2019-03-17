@@ -8,7 +8,7 @@ const Modules = {
 	Tabs,
 };
 
-const Widgets = (() => {
+const widgets = (() => {
 
 	let WidgetList = [];
 
@@ -44,4 +44,4 @@ const Widgets = (() => {
 
 })();
 
-export default Widgets;
+export default widgets;
