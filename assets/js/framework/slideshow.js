@@ -1,4 +1,4 @@
-import Component from "./component.js";
+import Widget from "./widget.js";
 
 
 /**
@@ -29,7 +29,7 @@ const Slideshow = (() => {
 	 */
 	const Slideshow = function(element) {
 
-		Component.call(this, "slideshow", element);
+		Widget.call(this, "slideshow", element);
 
 		this._currentSlide = 0;
 		this._slides = element.querySelectorAll(".slideshow-content");

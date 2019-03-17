@@ -1,4 +1,4 @@
-import Component from "./component.js";
+import Widget from "./widget.js";
 
 
 /**
@@ -9,7 +9,7 @@ const Tabs = (() => {
 
 	const Tabs = function(element) {
 
-		Component.call(this, "tabs", element);
+		Widget.call(this, "tabs", element);
 
 		this._group = [];
 		this._currentTab = 0;

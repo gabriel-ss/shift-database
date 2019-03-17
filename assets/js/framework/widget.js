@@ -1,6 +1,6 @@
-const Component = (() => {
+const Widget = (() => {
 
-	const Component = function(type, element) {
+	const Widget = function(type, element) {
 
 		Object.defineProperty(this, "type", {
 			value: type,
@@ -14,8 +14,8 @@ const Component = (() => {
 
 	};
 
-	return Component;
+	return Widget;
 
 })();
 
-export default Component;
+export default Widget;

@@ -1,4 +1,4 @@
-import Component from "./component.js";
+import Widget from "./widget.js";
 
 
 /**
@@ -9,7 +9,7 @@ const Modal = (() => {
 
 	const Modal = function(element) {
 
-		Component.call(this, "modal", element);
+		Widget.call(this, "modal", element);
 
 		this._isVisible = false;
 		this._overlay = document.createElement("div");
