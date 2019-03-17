@@ -36,7 +36,7 @@
 			<ul class="tab-group">
 				<li class="tab-title" data-tab-target="account">Account</li>
 				<li class="tab-title" data-tab-target="shifts">Shift Subscription</li>
-				<li class="tab-title" data-tab-target="list">My Shifts</li>
+				<li class="tab-title" data-tab-target="subscription-list">My Shifts</li>
 			</ul>
 		</nav>
 		<section id="account" class="body tab-content">
@@ -121,12 +121,7 @@
 			<div class="container ">
 			</div>
 		</section>
-		<section id="list" class="body tab-content">
-			<div class="container">
-				<?php // TODO: Update dynamically ?>
-				<?php	$table = new ShiftTable($connection); ?>
-					<?php echo $table->getAsHTMLList($_SESSION['user_id']); ?>
-			</div>
+		<section id="subscription-list" class="body tab-content">
 		</section>
 		</div>
 	</div>
