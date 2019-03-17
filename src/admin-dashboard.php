@@ -16,13 +16,23 @@
 		box-sizing: border-box;
 	}
 
-	.shift-cell:not([data-shift-id="null"]):hover {
-		background: var(--dark-overlay);
+	#schedule input{
+		width: 100%;
+		background: none;
+		border: none;
+	}
+
+	#schedule-creation {
+		display: flex;
+		justify-content: center;
+	}
+
+	tbody th{
 		cursor: pointer;
 	}
 
 	section {
-		height: 270px;
+		height: 65vh;
 		overflow: auto;
 	}
 
@@ -61,74 +71,17 @@
 					<h1>I AM ROOT!</h1>
 				</div>
 		</section>
-		<section id="shifts" class="body tab-content">
-			<div class="container ">
-				<h1>Shift list goes here</h1>
-			</div>
-		</section>
-		<section id="users" class="body tab-content">
-			<div class="container">
-				<button data-toggles="user-creation-modal">Add users</button>
-				<table>
-					<thead>
-						<th>E-mail</th>
-						<th>Name</th>
-						<th>Access Level</th>
-					</thead>
-					<tbody id="user-list">
-					</tbody>
-				</table>
-			</div>
-		</section>
+		<section id="shifts" class="body tab-content"></section>
+		<section id="users" class="body tab-content"></section>
 		</div>
 	</div>
 </div>
 
 
-<div id="user-update-modal" class="modal">
-	<div class="header">User Info</div>
-	<div class="body">
-		<label>
-			<strong>Name:</strong>
-			<input class="full-width" name="name" type="text">
-		</label>
-		<label>
-			<strong>Email:</strong>
-			<input class="full-width" name="email" type="email">
-		</label>
-		<label>
-			<strong>Access Level</strong>
-			<select name="access-level">
-				<option value="user">User</option>
-				<option value="admin">Administrator</option>
-			</select>
-		</label>
+<div id="user-creation-modal" class="modal"></div>
 
-	</div>
-	<div class="footer">
-		<button class="primary">Update info</button>
-		<button data-toggles="user-update-modal">Cancel</button>
-		<button class="danger">Delete user</button>
-	</div>
-</div>
+<div id="user-update-modal" class="modal"></div>
 
-
-<div class="modal" id="user-creation-modal">
-	<div class="header">Add users</div>
-	<div class="body">
-		<label>
-			<strong>User list:</strong>
-			<textarea class="full-width" name="" id=""></textarea>
-		</label>
-		<p>
-			Enter the email, initial password and name of each user to be created
-			in a single line separated by tabulations. More than one line can be
-			used at once to create multiple users.
-		</p>
-	</div>
-	<div class="footer">
-		<button id="user-creation-button">Add users</button>
-	</div>
-</div>
+<div id="shift-management-modal" class="modal"></div>
 
 <script src="js/master.js" charset="utf-8"></script>
