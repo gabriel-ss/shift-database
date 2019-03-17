@@ -24,6 +24,27 @@ class Shift
 	}
 
 
+	public function createShift($shiftList) {
+
+		$placeholders = str_repeat("(?, ?), ", count($shiftList) - 1) . '(?, ?)';
+
+		$query = $this->connection->prepare("INSERT IGNORE INTO shifts (date, user_count)
+			VALUES $placeholders");
+		$query->execute(array_merge(...$shiftList));
+
+		var_dump($query);
+	}
+
+
+	public function deleteShift($shiftId) {
+
+		$query = $this->connection->prepare("DELETE FROM shifts where
+			shift_id = ?");
+		$query->execute([$shiftId]);
+
+	}
+
+
 	/**
 	 * Creates a new entry in the database representing a user subscription.
 	 *
@@ -33,7 +54,9 @@ class Shift
 	 * subscribed.
 	 */
 	public function addShiftEntry($userId, $shiftId) {
-		$query = $this->connection->prepare("INSERT INTO shift_entries (user_id, shift_id )
+		$query = $this->connection->prepare(
+			"INSERT INTO
+				shift_entries (user_id, shift_id)
 			VALUES (?, ?)");
 		$query->execute([$userId, $shiftId]);
 	}
@@ -75,6 +98,53 @@ class Shift
 
 
 	/**
+	 * Queries the database after information about the shift and returns an
+	 * associative array with the data.
+	 *
+	 * @param  int     $shiftId       The ID of the shift to be queried
+	 * @param  boolean $fetchUserList [description]
+	 * @return Array                  An associative array containing the data
+	 * returned by the server
+	 */
+	public function getShiftInfo($shiftId, $userId) {
+
+		$fields = $userId ?
+			", EXISTS(SELECT * FROM shift_entries WHERE user_id = ? AND shift_id=?) AS is_subscribed
+			, count(shift_entries.user_id) AS subscriptions"
+			:
+			", CONCAT('[',GROUP_CONCAT(JSON_OBJECT('userId', users.user_id, 'name', name, 'email', email)),']') AS user_list";
+
+		$source = $userId ? "" :
+			"JOIN users ON users.user_id=shift_entries.user_id";
+
+		$query = $this->connection->prepare(
+			"SELECT
+				shifts.shift_id, date, user_count
+				$fields
+			FROM
+				shifts
+				LEFT JOIN shift_entries	ON shifts.shift_id=shift_entries.shift_id
+				$source
+			WHERE
+				shifts.shift_id=?"
+		);
+
+
+		if ($userId) {
+			$query->execute([$userId, $shiftId, $shiftId]);
+			$result = $query->fetch();
+			$result["is_subscribed"] = (bool)$result["is_subscribed"];
+		} else {
+			$query->execute([$shiftId]);
+			$result = $query->fetch();
+			$result["user_list"] = json_decode($result["user_list"]) ?: [];
+		}
+
+		return $result;
+	}
+
+
+	/**
 	 * Queries the database and returns a boolean indicating whether a
 	 * particular user is subscribed in the shift.
 	 *
@@ -91,40 +161,6 @@ class Shift
 			WHERE user_id = ? AND shift_id = ?");
 			$query->execute([$userId, $shiftId]);
 			return ($query->rowCount() ? true : false);
-	}
-
-
-	/**
-	 * Formats a modal in HTML containing info about the shift.
-	 *
-	 * @param  int $shiftId The ID of the shift.
-	 */
-	public function makeShiftModal($shiftId) {
-		$shiftDetails = $this->getShiftDetails($shiftId);
-		?>
-			<h1>Shift Details</h1>
-			<h2>Date:</h2>
-			<?php echo $shiftDetails["date"]->format("d/m/Y"); ?>
-			<br>
-			<div class="half-width">
-				<h2>Start Time:</h2>
-				<?php echo $shiftDetails["date"]->format("H:i"); ?>
-			</div>
-			<div class="half-width">
-				<h2>End Time:</h2>
-				<?php echo $shiftDetails["date"]->modify("+3 hours")->format("H:i"); ?>
-			</div>
-			<div class="half-width">
-				<h2>Capacity:</h2>
-				<?php echo $shiftDetails["user_count"]; ?>
-			</div>
-			<div class="half-width">
-				<h2>Subscriptions:</h2>
-				<?php echo $shiftDetails["subscriptions"]; ?>
-			</div>
-			<button class=" float-right">Subscribe</button>
-			<div class="container"></div>
-		<?php
 	}
 
 

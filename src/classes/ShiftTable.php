@@ -81,7 +81,7 @@ class ShiftTable
 			$schedule[$time][$date]["remainingSpace"] = $value['user_count'] - $value['subscriptions'];
 		}
 
-		return $schedule;
+		return $schedule ?? [];
 	}
 
 	/**
@@ -138,19 +138,22 @@ class ShiftTable
 	{
 		$query = $this->connection->prepare("SELECT shifts.shift_id, date FROM
 			shift_entries INNER JOIN shifts ON shifts.shift_id = shift_entries.shift_id
-			WHERE user_id = ?"
+			WHERE user_id = ?
+			ORDER BY date"
 		);
 
 		$query->execute([$userId]);
-		if (!$listSize = $query->rowCount())
-			return null;
-		$data = $query->fetchAll();
+		return $query->fetchAll() ?: [];
 
-		for ($i=0; $i < $listSize; $i++) {
-			$list[$i]['date'] = new DateTime($data[$i]["date"]);
-			$list[$i]['shift_id'] = $data[$i]["shift_id"];
-		}
-		return $list;
+		// if (!$listSize = $query->rowCount())
+		// 	return null;
+		// $data = $query->fetchAll();
+		//
+		// for ($i=0; $i < $listSize; $i++) {
+		// 	$list[$i]['date'] = new DateTime($data[$i]["date"]);
+		// 	$list[$i]['shift_id'] = $data[$i]["shift_id"];
+		// }
+		// return $list;
 	}
 
 	/**
