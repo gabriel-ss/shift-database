@@ -49,8 +49,9 @@ switch ($_REQUEST["intention"]) {
 
 
 	case 'delete_shift':
-		if ($user->getAccessLevel() !== "")// TODO: Check level
-			$shift->deleteShift($_GET["shift_id"]);
+		if ($user->getAccessLevel() !== "admin") break;
+
+		$shift->deleteShift($_GET["shift_id"]);
 		break;
 
 
@@ -70,7 +71,7 @@ switch ($_REQUEST["intention"]) {
 
 	case 'unsubscribe':
 		if (isset($_GET["user_id"])) {
-			if ($user->getAccessLevel() !== "")// TODO: Check level
+			if ($user->getAccessLevel() === "admin")
 				$shift->removeShiftEntry($_GET["user_id"], $_GET["shift_id"]);
 		} else
 			$shift->removeShiftEntry($_SESSION["user_id"], $_POST["shift_id"]);
