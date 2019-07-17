@@ -3,17 +3,16 @@ require "setup.php";
 
 if (!$user) {
 	$failedToLogin = false;
-	if (isset($_POST["email"])) {
-		try {
-			$user = User::login(
-				$userDataAccessor,
-				$_SESSION["user_id"],
-				$_POST["email"],
-				$_POST["password"]
-			);
-		} catch (Exception $e) {
-			$failedToLogin = true;
-		}
+	if (isset($_POST["email"]) && $_POST["email"] !== "") {
+
+		$user = User::login(
+			$userDataAccessor,
+			$_SESSION["user_id"],
+			$_POST["email"],
+			$_POST["password"]
+		);
+		$failedToLogin = !$user;
+
 	} elseif ($_SERVER["PHP_SELF"] != "/index.php") {
 		header("location:/index.php");
 	}
@@ -25,8 +24,7 @@ if (!$user) {
 	<head>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="/css/master.css">
-		<?php // TODO: Change the page title dynamically ?>
-		<title>Login</title>
+		<title>Shift Scheduler</title>
 	</head>
 	<body>
 		<header class="primary">

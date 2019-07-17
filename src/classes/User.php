@@ -120,8 +120,8 @@ class User
 
 	/**
 	 * Identifies a user by checking the given email and then verify the
-	 * password. Throws an error if the email does not exists in the database or
-	 * if the password is incorrect. If the login is successful returns an object
+	 * password. Returns null if the email does not exists in the database or if
+	 * the password is incorrect. If the login is successful returns an object
 	 * that is an instance of a class that extends User class chosen according to
 	 * the user's access level.
 	 *
@@ -147,15 +147,13 @@ class User
 		?string &$userId,
 		string $email,
 		string $password
-	): User {
+	): ?User {
 
 		$userData = $dataInterface->findOne(
 			[UD::EMAIL => $email]
 		);
 
-		// TODO: Change those exceptions
-		if (!$userData)
-			throw new Exception("User not found in the database");
+		if (!$userData) return null;
 
 		[
 			UD::ID => $id,
@@ -165,8 +163,7 @@ class User
 			UD::ACCESS_LEVEL => $accessLevel,
 		] = $userData;
 
-		if (!password_verify($password, $passwordHash))
-			throw new Exception("Incorrect password");
+		if (!password_verify($password, $passwordHash)) return null;
 
 		$userId = $id;
 
