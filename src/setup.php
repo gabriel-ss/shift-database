@@ -15,4 +15,6 @@ session_start();
 $connection =
 	new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $dbuser, $password);
 $userDataAccessor = new UserDataAccessor($connection);
-$user = User::restoreSession($userDataAccessor, $_SESSION["user_id"]);
+
+$user = isset($_SESSION["user_id"]) ?
+	User::restoreSession($userDataAccessor, $_SESSION["user_id"]) : null;

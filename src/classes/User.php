@@ -97,11 +97,11 @@ class User
 		UserDataInterface $dataInterface,
 		?string &$userId
 	): ?User {
-		if (!$userId) return null;
-
 		$userData = $dataInterface->findOne(
 			[UD::ID => $userId]
 		);
+
+		if (!$userData) return null;
 
 		[
 			UD::EMAIL => $email,
