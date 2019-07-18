@@ -80,7 +80,7 @@ class User
 
 
 	/**
-	 * Method to restore the session of an user that is already logged in.
+	 * Method to restore the session of a user that is already logged in.
 	 * Returns the same object that would be returned by calling the login method
 	 * with the email and the password of the user whose id was passed by
 	 * reference. If the id doesn't match any user, returns null.
@@ -208,6 +208,24 @@ class User
 			UD::NAME => $name,
 			UD::PASSWORD => password_hash($password, PASSWORD_DEFAULT),
 		]);
+
+	}
+
+
+	/**
+	 * Searches for a user with the specified email in the database.
+	 *
+	 * @param  string  $email  Email to be verified in the database.
+	 *
+	 * @return string          The id of the user with the given email or null if
+	 * a user with the corresponding email is not found.
+	 */
+	public static function searchByEmail(
+		UserDataInterface $dataInterface,
+		string $email
+	): ?string {
+
+		return $dataInterface->findOne([UD::EMAIL => $email])[0] ?? null;
 
 	}
 

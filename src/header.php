@@ -2,9 +2,22 @@
 require "setup.php";
 
 if (!$user) {
-	$failedToLogin = false;
-	if (isset($_POST["email"]) && $_POST["email"] !== "") {
 
+	$failedToLogin = false;
+
+	if (
+		isset($_SESSION['access_token'], $_REQUEST['access_token']) &&
+		$_SESSION['access_token'] === $_REQUEST['access_token']
+	) {
+
+		$recoveryEmail = $_SESSION["recovery_email"];
+		session_destroy();
+		session_start();
+		$_SESSION["user_id"] = User::searchByEmail($userDataAccessor, $recoveryEmail);
+		User::restoreSession($userDataAccessor, $_SESSION["user_id"]);
+		header("location:/password-update.php");
+
+	} elseif (isset($_POST["email"]) && $_POST["email"] !== "") {
 		$user = User::login(
 			$userDataAccessor,
 			$_SESSION["user_id"],
@@ -13,8 +26,13 @@ if (!$user) {
 		);
 		$failedToLogin = !$user;
 
-	} elseif ($_SERVER["PHP_SELF"] != "/index.php") {
+	} elseif (
+		$_SERVER["PHP_SELF"] != "/index.php" &&
+		$_SERVER["PHP_SELF"] != "/recover-password.php"
+	) {
+
 		header("location:/index.php");
+
 	}
 }
 
@@ -40,6 +58,7 @@ if (!$user) {
 						<input class="form-control"type="email" name="email" placeholder="e-mail">
 						<input type="password" name="password" placeholder="password">
 						<input type="submit" value="Login">
+						<a style="color:white" href="/recover-password.php">Recover password</a>
 					</form>
 				<?php endif; ?>
 
