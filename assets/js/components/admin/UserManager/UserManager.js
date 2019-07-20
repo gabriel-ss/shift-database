@@ -54,16 +54,15 @@ class UserManager extends Component {
 
 		User.fetchAll().then(users => {
 
-			users.sort((u1, u2) => (u1[2] > u2[2] ? 1 : -1));
-
+			users.sort((user1, user2) => (user1.name > user2.name ? 1 : -1));
 
 			users.forEach((user, index) => {
 
 				const userData = {
-					user: new User(user[0]),
-					email: user[1],
-					name: user[2],
-					accessLevel: user[3],
+					user: new User(user.id),
+					email: user.email,
+					name: user.name,
+					accessLevel: user.accessLevel,
 				};
 
 				UserEntry.insertIntoParent(this, index, userData)

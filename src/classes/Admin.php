@@ -12,12 +12,24 @@ class Admin extends User
 
 	public function getUserList(): array {
 
-		return $this->dataInterface->find([], [
+		$result = $this->dataInterface->find([], [
 			UD::ID,
 			UD::EMAIL,
 			UD::NAME,
 			UD::ACCESS_LEVEL
 		]);
+
+		$userCount = count($result);
+		for ($i = 0; $i < $userCount; $i++) {
+			$result[$i] = [
+				 "id" => $result[$i][0],
+				 "email" => $result[$i][1],
+				 "name" => $result[$i][2],
+				 "accessLevel" => $result[$i][3]
+			];
+		}
+
+		return $result;
 
 	}
 
@@ -26,7 +38,11 @@ class Admin extends User
 
 		$userCount = count($users);
 		for ($i = 0; $i < $userCount; $i++) {
-			$users[$i][1] = password_hash($users[$i][1], PASSWORD_DEFAULT);
+			$users[$i] = [
+				$users[$i]["email"],
+				password_hash($users[$i]["password"], PASSWORD_DEFAULT),
+				$users[$i]["name"]
+			];
 		}
 
 		return $this->dataInterface->insertMany(
@@ -41,7 +57,7 @@ class Admin extends User
 		?string $name = null,
 		?string $password = null,
 		?string $accessLevel = null
-	): void {
+	): int {
 
 		if ($password)
 			$password = password_hash($password, PASSWORD_DEFAULT);
@@ -53,13 +69,13 @@ class Admin extends User
 			UD::ACCESS_LEVEL => $accessLevel
 		]);
 
-		$this->dataInterface->update([UD::ID => $id], $values);
+		return $this->dataInterface->update([UD::ID => $id], $values);
 	}
 
 
-	public function deleteUser(string $id): void {
+	public function deleteUser(string $id): int {
 
-		$this->dataInterface->delete([UD::ID => $id]);
+		return $this->dataInterface->delete([UD::ID => $id]);
 
 	}
 

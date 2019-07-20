@@ -23,12 +23,12 @@ switch ($_REQUEST["intention"]) {
 
 
 	/**
-	 * Creates multiple shifts at once. The input must be an array of arrays
-	 * in which the first element is a string containing the date in the ISO year
-	 * with ISO week and day format (yyyy"-W"ww"-"d), the second is the time in
-	 * the format hh:mm and third is the shift capacity.
+	 * Creates multiple shifts at once. The input must be an array of objects
+	 * with keys "weekAndDay", "time" and "shiftCapacity". "weekAndDay" must be a
+	 * string containing the date in the ISO year with ISO week and day format
+	 * (yyyy"-W"ww"-"d) and "time" must be a string in the format hh:mm.
 	 *
-	 * Only avaliable to admins.
+	 * Only available to admins.
 	 */
 	case 'create_shifts':
 		if ($user->getAccessLevel() !== "admin") break;
@@ -38,12 +38,16 @@ switch ($_REQUEST["intention"]) {
 		$shift->createShift(
 			array_map(function($shift) {
 				return [
-					date("Y-m-d H:i:s", strtotime("{$shift[0]} {$shift[1]}")),
-					$shift[2]
+					// Convert to an SQL ready date format
+					date(
+						"Y-m-d H:i:s",
+						strtotime("{$shift["weekAndDay"]} {$shift['time']}")
+					),
+					$shift["shiftCapacity"]
 				];
 			}, array_filter($shifts, function($shift) {
 				// Filter shifts with capacity less than one.
-				return $shift[2] > 0;
+				return $shift["shiftCapacity"] > 0;
 			})));
 		break;
 
@@ -61,11 +65,12 @@ switch ($_REQUEST["intention"]) {
 
 
 	case 'subscribe':
-
-		// TODO: Check for room
-		$shift->hasUser($_SESSION["user_id"], $_REQUEST["shift_id"]) ?
-		$shift->removeShiftEntry($_SESSION["user_id"], $_REQUEST["shift_id"]) :
-		$shift->addShiftEntry($_SESSION["user_id"], $_REQUEST["shift_id"]);
+ 		// TODO: Check for room
+		if (isset($_GET["user_id"])) {
+			if ($user->getAccessLevel() === "admin")
+				$shift->addShiftEntry($_GET["user_id"], $_GET["shift_id"]);
+		} else
+			$shift->addShiftEntry($_SESSION["user_id"], $_GET["shift_id"]);
 		break;
 
 
@@ -74,8 +79,7 @@ switch ($_REQUEST["intention"]) {
 			if ($user->getAccessLevel() === "admin")
 				$shift->removeShiftEntry($_GET["user_id"], $_GET["shift_id"]);
 		} else
-			$shift->removeShiftEntry($_SESSION["user_id"], $_POST["shift_id"]);
-
+			$shift->removeShiftEntry($_SESSION["user_id"], $_GET["shift_id"]);
 		break;
 
 
@@ -111,18 +115,16 @@ switch ($_REQUEST["intention"]) {
 			"accessLevel" => null
 		], $values);
 
-
-		$user->updateUser($id, ...array_values($values));
+		echo $user->updateUser($id, ...array_values($values));
 		break;
 
 
 	case 'delete_user':
-		$users = json_decode(file_get_contents('php://input'), true);
-		$user->deleteUser($_GET["user_id"]);
+		echo $user->deleteUser($_GET["user_id"]);
 		break;
 
 
 	default:
-		echo json_encode($table->makeTable(new DateTime()));
+		echo json_encode($table->makeTable(new DateTime()) ?: []);
 		break;
 }

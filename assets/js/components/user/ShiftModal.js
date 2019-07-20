@@ -87,7 +87,7 @@ class ShiftModal extends Component {
 
 	unsubscribe() {
 
-		this.state.shift.addEntry().then(() => {
+		this.state.shift.deleteEntry().then(() => {
 
 			this.state.subscriptions--;
 			this.update({isSubscribed: false});

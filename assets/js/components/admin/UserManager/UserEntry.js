@@ -1,7 +1,7 @@
 import Component from "../../Component.js";
 
 
-class UserManager extends Component {
+class UserEntry extends Component {
 
 	constructor(mountSelector, state, options) {
 
@@ -52,4 +52,4 @@ class UserManager extends Component {
 }
 
 
-export default UserManager;
+export default UserEntry;

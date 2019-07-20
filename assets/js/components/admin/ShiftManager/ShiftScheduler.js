@@ -97,8 +97,11 @@ class ShiftScheduler extends Component {
 			const [{innerText: time}, ...cells] = tableRow.children;
 			const shiftCapacity = cells.map(cell => cell.firstChild.value);
 
-			return shiftCapacity.map((shiftCapacity, day) =>
-				[`${this.state.week}-${day + 1}`, time, shiftCapacity]);
+			return shiftCapacity.map((shiftCapacity, day) => ({
+				weekAndDay: `${this.state.week}-${day + 1}`,
+				time,
+				shiftCapacity,
+			}));
 
 		});
 
