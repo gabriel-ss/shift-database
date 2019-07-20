@@ -24,6 +24,12 @@ class Shift
 	}
 
 
+	/**
+	 * Creates new shifts from a received array of arrays, each containing the
+	 * date and shift capacity respectively.
+	 *
+	 * @param  array      $shiftList An array of arrays containing shift details
+	 */
 	public function createShift($shiftList) {
 
 		$placeholders = str_repeat("(?, ?), ", count($shiftList) - 1) . '(?, ?)';
@@ -36,6 +42,11 @@ class Shift
 	}
 
 
+	/**
+	 * Delete the shift specified by the $shiftId from the database.
+	 *
+	 * @param  string      $shiftId The id of the shift to be deleted.
+	 */
 	public function deleteShift($shiftId) {
 
 		$query = $this->connection->prepare("DELETE FROM shifts where
@@ -82,7 +93,7 @@ class Shift
 	 *
 	 * @param  int $shiftId The ID of the shift to be queried
 	 *
-	 * @return Array          An associative array containing the data returned
+	 * @return array          An associative array containing the data returned
 	 * by the server
 	 */
 	public function getShiftDetails($shiftId) {
@@ -99,16 +110,20 @@ class Shift
 
 	/**
 	 * Queries the database after information about the shift and returns an
-	 * associative array with the data.
+	 * associative array with the data. If an userId is given the response will
+	 * contain a field with the number of subscriptions and another with a
+	 * boolean indicating if the user is one of them. If null is given it will
+	 * contain an array os subscribed users instead.
 	 *
 	 * @param  int     $shiftId       The ID of the shift to be queried
-	 * @param  boolean $fetchUserList [description]
-	 * @return Array                  An associative array containing the data
+	 * @param  int     $userId        The ID of the user to be queried. Passing
+	 * null causes the returned array to contain a list of subscribed users.
+	 * @return array                  An associative array containing the data
 	 * returned by the server
 	 */
 	public function getShiftInfo($shiftId, $userId) {
 
-		$fields = $userId ?
+		$fields = $userId !== null ?
 			", EXISTS(SELECT * FROM shift_entries WHERE user_id = ? AND shift_id=?) AS is_subscribed
 			, count(shift_entries.user_id) AS subscriptions"
 			:

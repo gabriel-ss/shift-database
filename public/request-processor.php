@@ -1,21 +1,46 @@
 <?php
+/**
+ * Asynchronous request processor. This page does all the interaction with the
+ * database. All the requests made either via GET or POST and have always an
+ * "intention" field that defines what interaction the request will have with
+ * the backend and how it will be futher treated by this processor.
+ */
+
 require '../local/setup.php';
 
 $shift = new Shift($connection);
 $table = new ShiftTable($connection);
 switch ($_REQUEST["intention"]) {
 
+	/**
+	 * Returns a JSON representation of an object where each key is a string with
+	 * the shift time and the value is an object in which the keys represent
+	 * the day of the week with a number from 0 to 6.
+	 */
 	case "get_table":
 		$date = new DateTime($_GET["week"]);
 		echo json_encode($table->makeTable($date) ?: []);
 		break;
 
 
+	/**
+	 * Returns an array of objects representing all shifts where the current user
+	 * is subscribed.
+	 */
 	case "get_user_subscriptions":
 		echo json_encode($table->makeList($_SESSION["user_id"]));
 		break;
 
 
+	/**
+	 * Returns an object containing information about the shift specified by the
+	 * shift_id parameter. If the request is made by a common user the object
+	 * will contain a field with the number of subscriptions and another with a
+	 * boolean indicating if the user is one of them. If made by an admin it will
+	 * contain an array os subscribed users instead. Admins can also specify an
+	 * "user_id" field in the request to receive the response that the
+	 * corresponding would get.
+	 */
 	case 'get_shift_info':
 		$userId = ($user->getAccessLevel() !== "admin") ? $_SESSION["user_id"] : $_REQUEST["user_id"];
 		echo json_encode($shift->getShiftInfo($_GET["shift_id"], $userId));
@@ -52,6 +77,11 @@ switch ($_REQUEST["intention"]) {
 		break;
 
 
+	/**
+	 * Deletes the shift specified by the "shift_id" field from the database.
+	 *
+	 * Only available to admins.
+	 */
 	case 'delete_shift':
 		if ($user->getAccessLevel() !== "admin") break;
 
@@ -64,6 +94,11 @@ switch ($_REQUEST["intention"]) {
 		break;
 
 
+	/**
+	 * Subscribe the current user from the shift specified by the "shift_id"
+	 * field. Admins can also specify an "user_id" to subscribe the corresponding
+	 * user instead.
+	 */
 	case 'subscribe':
  		// TODO: Check for room
 		if (isset($_GET["user_id"])) {
@@ -74,6 +109,11 @@ switch ($_REQUEST["intention"]) {
 		break;
 
 
+	/**
+	 * Unsubscribe the current user from the shift specified by the "shift_id"
+	 * field. Admins can also specify an "user_id" to unsubscribe the
+	 * corresponding user instead.
+	 */
 	case 'unsubscribe':
 		if (isset($_GET["user_id"])) {
 			if ($user->getAccessLevel() === "admin")
@@ -83,6 +123,12 @@ switch ($_REQUEST["intention"]) {
 		break;
 
 
+	/**
+	 * Returns an object containing a boolean indicating if the user specified
+	 * by the "user_id" is subscribed in the shift corresponding to "shift_id".
+	 * If no "user_id" is specified checks the subscription of the current user
+	 * instead.
+	 */
 	case 'check_user_subscription':
 		echo json_encode(
 			$shift->hasUser(
@@ -93,17 +139,35 @@ switch ($_REQUEST["intention"]) {
 		break;
 
 
+	/**
+	 * Returns an array with all the users regitred in the system.
+	 *
+	 * Only available to admins.
+	 */
 	case 'get_user_list':
 		echo json_encode($user->getUserList());
 		break;
 
 
+	/**
+	 * Receives an array of objects containing "name", "email", and "password"
+	 * from each user to be inserted in the database.
+	 *
+	 * Only available to admins.
+	 */
 	case 'register_users':
 		$users = json_decode(file_get_contents('php://input'), true);
 		echo $user->batchRegister($users);
 		break;
 
 
+	/**
+	 * Receives an object containing an "id" key specifing the user to be updated
+	 * and a "values" key with anobject that can contain optionally the keys
+	 * "email", "name", "password" and "accessLevel" with the new user data.
+	 *
+	 * Only available to admins.
+	 */
 	case 'update_user':
 		["id" => $id, "values" => $values] =
 			json_decode(file_get_contents('php://input'), true);
@@ -119,11 +183,20 @@ switch ($_REQUEST["intention"]) {
 		break;
 
 
+	/**
+	 * Removes the user specified by "user_id".
+	 *
+	 * Only available to admins.
+	 */
 	case 'delete_user':
 		echo $user->deleteUser($_GET["user_id"]);
 		break;
 
 
+	/**
+	 * Responds the same way that the "get_table" intention with information
+	 * about the current week.
+	 */
 	default:
 		echo json_encode($table->makeTable(new DateTime()) ?: []);
 		break;
