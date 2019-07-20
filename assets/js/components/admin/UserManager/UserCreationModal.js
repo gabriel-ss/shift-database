@@ -23,7 +23,6 @@ class UserUpdateModal extends Component {
 
 	render() {
 
-		// TODO: Select separator
 		return `
 		<div class="header">Add users</div>
 		<div class="body">
@@ -33,9 +32,15 @@ class UserUpdateModal extends Component {
 			</label>
 			<p>
 				Enter the email, initial password and name of each user to be created
-				respectively in a single line separated by tabulations. More than
-				one line can be used at once to create multiple users.
+				respectively in a single line separated by the character selected
+				below. More than one line can be used at once to create multiple
+				users.
 			</p>
+			<strong>Separator:</strong>
+			<div style="display: flex">
+				<label><input name="separator" checked type="radio" id="\t" />Tabulations</label>
+				<label><input name="separator" type="radio" id="," />Commas</label>
+			</div>
 		</div>
 		<div class="footer">
 			<button onclick="${this.getRef()}.addUsers()">Add users</button>
@@ -67,13 +72,16 @@ class UserUpdateModal extends Component {
 
 	addUsers() {
 
+		const separator = document
+			.querySelector('input[name="separator"]:checked').id;
+
 		const userList = document
 			.querySelector("#user-creation-modal textarea")
 			.value
 			.split("\n")
 			.map(line => {
 
-				const [email, password, name] = line.split("\t");
+				const [email, password, name] = line.split(separator);
 
 				return {email, password, name};
 
