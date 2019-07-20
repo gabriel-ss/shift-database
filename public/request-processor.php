@@ -100,7 +100,6 @@ switch ($_REQUEST["intention"]) {
 	 * user instead.
 	 */
 	case 'subscribe':
- 		// TODO: Check for room
 		if (isset($_GET["user_id"])) {
 			if ($user->getAccessLevel() === "admin")
 				$shift->addShiftEntry($_GET["user_id"], $_GET["shift_id"]);

@@ -43,8 +43,10 @@ class ShiftModal extends Component {
 		</div>
 		<div class="footer">
 			${this.state.isSubscribed
-			? `<button onclick="${this.getRef()}.unsubscribe()">Unsubscribe</button>`
-			: `<button onclick="${this.getRef()}.subscribe()">Subscribe</button>`}
+		? `<button onclick="${this.getRef()}.unsubscribe()">Unsubscribe</button>`
+		: `<button onclick="${this.getRef()}.subscribe()"${
+			this.state.subscriptions >= this.state.capacity	? " disabled" : ""
+		}> Subscribe</button>`}
 		</div>
 		`;
 
