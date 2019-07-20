@@ -100,27 +100,6 @@ class Shift
 
 	/**
 	 * Queries the database after information about the shift and returns an
-	 * associative array with the data.
-	 *
-	 * @param  int $shiftId The ID of the shift to be queried
-	 *
-	 * @return array          An associative array containing the data returned
-	 * by the server
-	 */
-	public function getShiftDetails($shiftId) {
-		$query = $this->connection->prepare("SELECT date, user_count, count(user_id) AS subscriptions FROM shifts
-			LEFT JOIN shift_entries ON shifts.shift_id = shift_entries.shift_id
-			WHERE shifts.shift_id=?");
-		$query->execute([$shiftId]);
-
-		$result = $query->fetch();
-		$result["date"] = new DateTime($result["date"]);
-		return $result;
-	}
-
-
-	/**
-	 * Queries the database after information about the shift and returns an
 	 * associative array with the data. If an userId is given the response will
 	 * contain a field with the number of subscriptions and another with a
 	 * boolean indicating if the user is one of them. If null is given it will

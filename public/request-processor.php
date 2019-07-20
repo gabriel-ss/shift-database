@@ -89,11 +89,6 @@ switch ($_REQUEST["intention"]) {
 		break;
 
 
-	case 'get_shift_details':
-		echo json_encode($shift->getShiftDetails($_GET["shift_id"]));
-		break;
-
-
 	/**
 	 * Subscribe the current user from the shift specified by the "shift_id"
 	 * field. Admins can also specify an "user_id" to subscribe the corresponding

@@ -84,47 +84,6 @@ class ShiftTable
 		return $schedule ?? [];
 	}
 
-	/**
-	 * Calls the method makeTable and format the result of the query into an
-	 * HTML table.
-	 *
-	 * @param DateTime $dayReference A DateTime object representing one day of
-	 * the week to be queried. If no argument is passed the method will query
-	 * info of the current week.
-	 *
-	 * @return string
-	 */
-	public function getAsHTMLTable($dayReference=null)
-	{
-		$schedule = $this->makeTable($dayReference);
-
-		$table =
-				"<tr>
-					<th></th>
-					<th>Monday</th>
-					<th>Tuesday</th>
-					<th>Wednesday</th>
-					<th>Thursday</th>
-					<th>Friday</th>
-				</tr>";
-
-		foreach ($schedule as $time => $date) {
-			$table .= "<tr><th>$time</th>";
-			for ($i=1; $i <6 ; $i++) {
-				// If $date[$i] does not exist $remainingSpace will be set to "--".
-				// If it does exist but is equals to 0 $remainingSpace will be set
-				// to "full".
-				$remainingSpace = (($date[$i]["remainingSpace"] ?? "--") ?: "full");
-				// If $date[$i] exists the id of the td element will be set to
-				// "shift:shiftID". If it does not "shift:null" will be assigned
-				$htmlId = $date[$i]["shift_id"] ?? "null";
-				$table.= "<td id='shift:$htmlId'>$remainingSpace</td>";
-			}
-			$table.= "</tr>";
-		}
-
-		return $table;
-	}
 
 	/**
 	 * Searches for all shift entries of a certain user in the database and
@@ -156,34 +115,4 @@ class ShiftTable
 		// return $list;
 	}
 
-	/**
-	 * Calls the method makeList and format the result of the query into an
-	 * HTML table.
-	 * @param  integer $userId The numeric identifier of the user.
-	 * @return string
-	 */
-	public function getAsHTMLList($userId)
-	{
-
-
-		$table = "<table><tr><th>Date</th><th>Time</th></tr>";
-
-		if (!$list = $this->makeList($userId)) {
-			return $table . "<tr><td>--</td><td>--</td></tr></table>";
-		}
-
-		$listSize = count($list);
-		for ($i=0; $i < $listSize; $i++) {
-			$table .= "<tr id='shift:{$list[$i]['shift_id']}'>
-				<td>{$list[$i]['date']->format("d/m/Y")}</td>
-				<td>{$list[$i]['date']->format("H:i")}</td>
-				</tr>";
-		}
-
-		$table .= "</table>";
-
-		return $table;
-	}
 }
-
- ?>
