@@ -87,8 +87,8 @@ class ShiftTable
 
 	/**
 	 * Searches for all shift entries of a certain user in the database and
-	 * returns an array of DateTime objects corresponding to each shift date.
-	 * No entry exists for that user returns null instead.
+	 * returns an array of objects containing the shift_id and the time of each
+	 * shift date.
 	 *
 	 * @param  integer $userId The numeric identifier of the user.
 	 * @return array
@@ -104,15 +104,6 @@ class ShiftTable
 		$query->execute([$userId]);
 		return $query->fetchAll() ?: [];
 
-		// if (!$listSize = $query->rowCount())
-		// 	return null;
-		// $data = $query->fetchAll();
-		//
-		// for ($i=0; $i < $listSize; $i++) {
-		// 	$list[$i]['date'] = new DateTime($data[$i]["date"]);
-		// 	$list[$i]['shift_id'] = $data[$i]["shift_id"];
-		// }
-		// return $list;
 	}
 
 }
