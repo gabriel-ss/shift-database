@@ -134,7 +134,7 @@ class Shift
 	 */
 	public function getShiftInfo($shiftId, $userId) {
 
-		$fields = $userId !== null ?
+		$fields = $userId || $userId === 0 ?
 			", EXISTS(SELECT * FROM shift_entries WHERE user_id = ? AND shift_id=?) AS is_subscribed
 			, count(shift_entries.user_id) AS subscriptions"
 			:
