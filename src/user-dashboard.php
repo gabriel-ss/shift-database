@@ -16,16 +16,6 @@
 		box-sizing: border-box;
 	}
 
-	.shift-cell:not([data-shift-id="null"]):hover {
-		background: var(--dark-overlay);
-		cursor: pointer;
-	}
-
-	section {
-		height: 270px;
-		overflow: auto;
-	}
-
 	#messages {
 		height: 200px
 	}
