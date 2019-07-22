@@ -9,7 +9,6 @@
 require '../local/setup.php';
 
 $shift = new Shift($connection);
-$table = new ShiftTable($connection);
 switch ($_REQUEST["intention"]) {
 
 	/**
@@ -18,8 +17,7 @@ switch ($_REQUEST["intention"]) {
 	 * the day of the week with a number from 0 to 6.
 	 */
 	case "get_table":
-		$date = new DateTime($_GET["week"]);
-		echo json_encode($table->makeTable($date) ?: []);
+		echo json_encode($shift->queryShiftsByWeek($_GET["week"]));
 		break;
 
 
@@ -28,7 +26,7 @@ switch ($_REQUEST["intention"]) {
 	 * is subscribed.
 	 */
 	case "get_user_subscriptions":
-		echo json_encode($table->makeList($_SESSION["user_id"]));
+		echo json_encode($shift->queryShiftsByUser($_SESSION["user_id"]));
 		break;
 
 
@@ -60,7 +58,7 @@ switch ($_REQUEST["intention"]) {
 
 		$shifts = json_decode(file_get_contents('php://input'), true);
 
-		$shift->createShift(
+		$shift->createShifts(
 			array_map(function($shift) {
 				return [
 					// Convert to an SQL ready date format
@@ -192,6 +190,6 @@ switch ($_REQUEST["intention"]) {
 	 * about the current week.
 	 */
 	default:
-		echo json_encode($table->makeTable(new DateTime()) ?: []);
+		echo json_encode($shift->queryShiftsByWeek(date("Y-\WW")));
 		break;
 }

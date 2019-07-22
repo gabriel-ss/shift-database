@@ -30,7 +30,7 @@ class Shift
 	 *
 	 * @param  array      $shiftList An array of arrays containing shift details
 	 */
-	public function createShift($shiftList) {
+	public function createShifts($shiftList) {
 
 		$placeholders = str_repeat("(?, ?), ", count($shiftList) - 1) . '(?, ?)';
 
@@ -166,6 +166,68 @@ class Shift
 			WHERE user_id = ? AND shift_id = ?");
 			$query->execute([$userId, $shiftId]);
 			return ($query->rowCount() ? true : false);
+	}
+
+
+	/**
+	 * Queries the database for shifts in the specified week and returns a
+	 * bidimensional array containing arrays with the "shift_id" and the
+	 * "remainingSpace" keys. The first dimension have named indexes representing
+	 * the shift time in the format "hh:mm" and the second have numbered indexes
+	 * from 0 to 6 representing the day of the week.
+	 *
+	 * @param string   $dayReference     A string containing the ISO week
+	 * representation (yyyy"-W"ww") of the current week.
+	 *
+	 * @return array
+	 */
+	public function queryShiftsByWeek($week)
+	{
+		$weekStart = date("Y-m-d", strtotime($week));
+		$weekEnd = date_create($week)->modify("+1 week")->format("Y-m-d");
+		$query = $this->connection->prepare("SELECT shifts.shift_id, date, user_count,
+			count(user_id) AS subscriptions FROM shifts LEFT JOIN shift_entries
+			ON shifts.shift_id=shift_entries.shift_id	WHERE
+			date > ? AND date < ? GROUP BY shift_id ORDER BY date"
+		);
+
+		// Makes a query that returns shift entries in the period of one week
+		$query->execute([$weekStart, $weekEnd]);
+
+		$result = $query->fetchAll();
+
+		foreach ($result as $value) {
+			$dt = new DateTime($value['date']);
+			$date = $dt->format("w");
+			$time = $dt->format("H:i");
+
+			$schedule[$time][$date]["shift_id"] = $value['shift_id'];
+			$schedule[$time][$date]["remainingSpace"] = $value['user_count'] - $value['subscriptions'];
+		}
+
+		return $schedule ?? [];
+	}
+
+
+	/**
+	 * Searches for all shift subscriptions of a certain user in the database and
+	 * returns an array of objects containing the shift_id and the time of each
+	 * shift date.
+	 *
+	 * @param  integer $userId The numeric identifier of the user.
+	 * @return array
+	 */
+	public function queryShiftsByUser($userId)
+	{
+		$query = $this->connection->prepare("SELECT shifts.shift_id, date FROM
+			shift_entries INNER JOIN shifts ON shifts.shift_id = shift_entries.shift_id
+			WHERE user_id = ?
+			ORDER BY date"
+		);
+
+		$query->execute([$userId]);
+		return $query->fetchAll() ?: [];
+
 	}
 
 
