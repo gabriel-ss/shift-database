@@ -24,16 +24,11 @@ class ShiftViewer extends Component {
 	render() {
 
 		return `
-		<table>
+		<table id="viewer">
 			<thead>
-				<th></th>
-				<th>Monday</th>
-				<th>Tuesday</th>
-				<th>Wednesday</th>
-				<th>Thursday</th>
-				<th>Friday</th>
+				${this.renderTableHead()}
 			</thead>
-			<tbody id="viewer">
+			<tbody>
 				${this.renderTableBody()}
 			</tbody>
 		</table>
@@ -83,6 +78,30 @@ class ShiftViewer extends Component {
 	}
 
 
+	getFormatedDate(day) {
+
+		const [year, week] = this.state.week.split("-W");
+		const date = new Date(year, 0, ((week - 1) * 7) + 1);
+		const dayOfWeek = date.getDay();
+
+		date.setDate(date.getDate() - dayOfWeek + day + (dayOfWeek <= 4 ? 1 : 8));
+		const pad = value => value.toString().padStart(2, "0");
+
+		return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}`;
+
+	}
+
+
+	renderTableHead() {
+
+		return `<th></th>${["Mon", "Tue", "Wed", "Thu", "Fri"]
+			.reduce((acc, dayOfWeek, index) =>
+				`${acc}<th>${dayOfWeek} - ${this.getFormatedDate(index)}</th>`
+			, "")}`;
+
+	}
+
+
 	renderTableBody() {
 
 		let tableBody = "";
@@ -101,10 +120,11 @@ class ShiftViewer extends Component {
 		Shift.fetchWeek(`${this.state.week}`).then(schedule => {
 
 			this.state.schedule = schedule;
-			const tableBody = document.querySelector("#viewer");
+			const [tableHead, tableBody] =
+				document.querySelector("#viewer").children;
 
+			tableHead.innerHTML = this.renderTableHead();
 			if (!tableBody) return;
-
 			tableBody.innerHTML = this.renderTableBody();
 
 		});

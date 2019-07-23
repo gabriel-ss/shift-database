@@ -23,12 +23,7 @@ class ShiftScheduler extends Component {
 				<table>
 					<thead>
 						<th></th>
-						<th>Monday</th>
-						<th>Tuesday</th>
-						<th>Wednesday</th>
-						<th>Thursday</th>
-						<th>Friday</th>
-						<th></th>
+						<th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th>
 					</thead>
 					<tbody id="schedule">
 						${this.renderSchedule()}

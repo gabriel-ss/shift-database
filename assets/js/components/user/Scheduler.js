@@ -35,16 +35,11 @@ class Scheduler extends Component {
 			<div style="display: flex">
 				<input id="week-selector" type="week" value="${this.state.week || ""}" oninput="${this.getRef()}.onWeekChange(this)">
 			</div>
-			<table>
+			<table id="scheduler">
 				<thead>
-					<th></th>
-					<th>Monday</th>
-					<th>Tuesday</th>
-					<th>Wednesday</th>
-					<th>Thursday</th>
-					<th>Friday</th>
+					${this.renderTableHead()}
 				</thead>
-				<tbody id="viewer">
+				<tbody>
 					${this.renderTableBody()}
 				</tbody>
 			</table>
@@ -58,6 +53,20 @@ class Scheduler extends Component {
 
 		this.state.week = element.value;
 		this.fetchWeek();
+
+	}
+
+
+	getFormatedDate(day) {
+
+		const [year, week] = this.state.week.split("-W");
+		const date = new Date(year, 0, ((week - 1) * 7) + 1);
+		const dayOfWeek = date.getDay();
+
+		date.setDate(date.getDate() - dayOfWeek + day + (dayOfWeek <= 4 ? 1 : 8));
+		const pad = value => value.toString().padStart(2, "0");
+
+		return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}`;
 
 	}
 
@@ -79,8 +88,8 @@ class Scheduler extends Component {
 
 			row += `
 				<td class='shift-cell'>	${cellContent === "--"
-					? ""
-					: `<button onclick="${this.getRef()}.childComponents.modal.setShift(${shiftId})">
+		? ""
+		: `<button onclick="${this.getRef()}.childComponents.modal.setShift(${shiftId})">
 						Show Details
 					</button>`}
 					<p>${cellContent}</p>
@@ -91,6 +100,16 @@ class Scheduler extends Component {
 		row += "</tr>";
 
 		return row;
+
+	}
+
+
+	renderTableHead() {
+
+		return `<th></th>${["Mon", "Tue", "Wed", "Thu", "Fri"]
+			.reduce((acc, dayOfWeek, index) =>
+				`${acc}<th>${dayOfWeek} - ${this.getFormatedDate(index)}</th>`
+			, "")}`;
 
 	}
 
@@ -112,8 +131,10 @@ class Scheduler extends Component {
 		Shift.fetchWeek(`${this.state.week}`).then(schedule => {
 
 			this.state.schedule = schedule;
-			const tableBody = document.querySelector("#viewer");
+			const [tableHead, tableBody] =
+				document.querySelector("#scheduler").children;
 
+			tableHead.innerHTML = this.renderTableHead();
 			tableBody.innerHTML = this.renderTableBody();
 
 		});
