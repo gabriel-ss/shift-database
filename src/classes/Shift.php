@@ -70,7 +70,7 @@ class Shift
 			"SELECT user_count, count(shift_entries.user_id) AS subscriptions FROM
 			shifts LEFT JOIN shift_entries ON
 			shifts.shift_id=shift_entries.shift_id	WHERE	shifts.shift_id=?");
-		$query->execute([$userId, $shiftId]);
+		$query->execute([$shiftId]);
 
 		["subscriptions" => $subscriptions, "user_count" => $capacity] = $query->fetch();
 

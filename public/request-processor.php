@@ -40,7 +40,8 @@ switch ($_REQUEST["intention"]) {
 	 * corresponding would get.
 	 */
 	case 'get_shift_info':
-		$userId = ($user->getAccessLevel() !== "admin") ? $_SESSION["user_id"] : $_REQUEST["user_id"];
+		$userId = ($user->getAccessLevel() !== "admin") ?
+			$_SESSION["user_id"] : ($_REQUEST["user_id"] ?? null);
 		echo json_encode($shift->getShiftInfo($_GET["shift_id"], $userId));
 		break;
 

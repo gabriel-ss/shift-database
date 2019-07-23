@@ -43,7 +43,7 @@ const Shift = (() => {
 
 		fetchData(userId) {
 
-			return fetch(`request-processor.php?intention=get_shift_info&shift_id=${this.id}&user_id=${userId || ""}`, {
+			return fetch(`request-processor.php?intention=get_shift_info&shift_id=${this.id}${userId ? `&user_id=${userId}` : ""}`, {
 				method: "GET",
 				credentials: "same-origin",
 			}).then(shift => shift.json());
@@ -63,7 +63,7 @@ const Shift = (() => {
 
 		deleteEntry(userId) {
 
-			return fetch(`request-processor.php?intention=unsubscribe&shift_id=${this.id}&user_id=${userId}`, {
+			return fetch(`request-processor.php?intention=unsubscribe&shift_id=${this.id}${userId ? `&user_id=${userId}` : ""}`, {
 				method: "GET",
 				credentials: "same-origin",
 			});
