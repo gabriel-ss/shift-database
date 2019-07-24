@@ -2,6 +2,7 @@ import Component from "../Component.js";
 import Shift from "../../Shift.js";
 import widgets from "../../widgets/widgets.js";
 
+const {SUBSCRIPTION_TIME_LIMIT, UNSUBSCRIPTION_TIME_LIMIT} = window.config;
 
 class ShiftModal extends Component {
 
@@ -42,13 +43,7 @@ class ShiftModal extends Component {
 			</div>
 		</div>
 		<div class="footer">
-			${this.state.isSubscribed
-		? `<button onclick="${this.getRef()}.unsubscribe()"${
-			this.state.date <= new Date()	? " disabled" : ""
-		}>Unsubscribe</button>`
-		: `<button onclick="${this.getRef()}.subscribe()"${
-			this.state.subscriptions >= this.state.capacity	? " disabled" : ""
-		}> Subscribe</button>`}
+			${this.renderSubscriptionButton()}
 		</div>
 		`;
 
@@ -73,6 +68,31 @@ class ShiftModal extends Component {
 	runAfterUpdate() {
 
 		widgets(this.mountSelector)[0].addCloseButton();
+
+	}
+
+
+	renderSubscriptionButton() {
+
+		const now = new Date();
+		const {date, subscriptions, capacity} = this.state;
+
+		if (this.state.isSubscribed) {
+
+			const canUnsubscribe =
+				(date - now) / 60000 >= UNSUBSCRIPTION_TIME_LIMIT;
+
+			return `<button onclick="${this.getRef()}.unsubscribe()"${
+				canUnsubscribe ? "" : " disabled"}>Unsubscribe</button>`;
+
+		}
+
+		const canSubscribe =
+			(subscriptions < capacity) &&
+			(((date - now) / 60000) >= SUBSCRIPTION_TIME_LIMIT);
+
+		return `<button onclick="${this.getRef()}.subscribe()"${
+			canSubscribe ? "" : " disabled"}> Subscribe</button>`;
 
 	}
 

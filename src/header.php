@@ -42,6 +42,8 @@ if (!$user) {
 	window.config = {
 		DEFAULT_SHIFT_CAPACITY: <?php echo $defaultShiftCapacity; ?>,
 		DEFAULT_SCHEDULE: <?php echo json_encode($defaultSchedule); ?>,
+		SUBSCRIPTION_TIME_LIMIT: <?php echo $subscriptionTimeLimit; ?>,
+		UNSUBSCRIPTION_TIME_LIMIT: <?php echo $unsubscriptionTimeLimit; ?>,
 	}
 </script>
 <html>
