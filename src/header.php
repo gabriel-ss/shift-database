@@ -38,6 +38,12 @@ if (!$user) {
 
 ?>
 <!DOCTYPE html>
+<script type="text/javascript">
+	window.config = {
+		DEFAULT_SHIFT_CAPACITY: <?php echo $defaultShiftCapacity; ?>,
+		DEFAULT_SCHEDULE: <?php echo json_encode($defaultSchedule); ?>,
+	}
+</script>
 <html>
 	<head>
 		<meta charset="utf-8">

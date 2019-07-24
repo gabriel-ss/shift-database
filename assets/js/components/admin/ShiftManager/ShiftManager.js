@@ -2,6 +2,7 @@ import Component from "../../Component.js";
 import ShiftScheduler from "./ShiftScheduler.js";
 import ShiftViewer from "./ShiftViewer.js";
 
+const {DEFAULT_SHIFT_CAPACITY, DEFAULT_SCHEDULE} = window.config;
 
 class ShiftManager extends Component {
 
@@ -16,11 +17,12 @@ class ShiftManager extends Component {
 
 		ShiftViewer.insertIntoParent(this, "viewer", {week: this.state.week});
 
+
 		ShiftScheduler
 			.insertIntoParent(this, "scheduler", {
 				week: this.state.week,
-				schedule: ["09:00", "11:00", "13:00"],
-				defaultCapacity: 7,
+				schedule: [...DEFAULT_SCHEDULE],
+				defaultCapacity: DEFAULT_SHIFT_CAPACITY,
 			})
 			.addEventListener("shiftcreation", () =>
 				this.childComponents.viewer.updateWeek());
@@ -38,8 +40,8 @@ class ShiftManager extends Component {
 				<button class="tab-title" onclick="${this.getRef()}.update({isCreating: false})">Shift Viewer</button>
 			</div>
 			${this.state.isCreating
-				? this.childComponents.scheduler
-				: this.childComponents.viewer}
+		? this.childComponents.scheduler
+		: this.childComponents.viewer}
 		</div>
 			`;
 
