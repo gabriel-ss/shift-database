@@ -120,11 +120,12 @@ class ShiftViewer extends Component {
 		Shift.fetchWeek(`${this.state.week}`).then(schedule => {
 
 			this.state.schedule = schedule;
-			const [tableHead, tableBody] =
-				document.querySelector("#viewer").children;
+			const viewer = document.querySelector("#viewer");
+
+			if (!viewer) return;
+			const [tableHead, tableBody] = viewer.children;
 
 			tableHead.innerHTML = this.renderTableHead();
-			if (!tableBody) return;
 			tableBody.innerHTML = this.renderTableBody();
 
 		});
