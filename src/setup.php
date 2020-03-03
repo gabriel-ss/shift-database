@@ -3,6 +3,7 @@ require '../local/config.php';
 
 
 function autoloader($class) {
+	$class = str_replace("\\", DIRECTORY_SEPARATOR, $class);
 	include_once '../local/classes/' . $class . '.php';
 }
 
