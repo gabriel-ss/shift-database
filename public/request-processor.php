@@ -22,6 +22,16 @@ switch ($_REQUEST["intention"]) {
 
 
 	/**
+	 * Returns a JSON representation of an object where each key is a string with
+	 * the shift time and the value is an object in which the keys represent
+	 * the day of the week with a number from 0 to 6.
+	 */
+	case "get_sector_list":
+		echo json_encode($shift->getSectorList());
+		break;
+
+
+	/**
 	 * Returns an array of objects representing all shifts where the current user
 	 * is subscribed.
 	 */
@@ -48,9 +58,9 @@ switch ($_REQUEST["intention"]) {
 
 	/**
 	 * Creates multiple shifts at once. The input must be an array of objects
-	 * with keys "weekAndDay", "time" and "shiftCapacity". "weekAndDay" must be a
-	 * string containing the date in the ISO year with ISO week and day format
-	 * (yyyy"-W"ww"-"d) and "time" must be a string in the format hh:mm.
+	 * with keys "weekAndDay", "time", "shiftCapacity" and sector. "weekAndDay"
+	 * must be a string containing the date in the ISO year with ISO week and day
+	 * format (yyyy"-W"ww"-"d) and "time" must be a string in the format hh:mm.
 	 *
 	 * Only available to admins.
 	 */
@@ -67,7 +77,8 @@ switch ($_REQUEST["intention"]) {
 						"Y-m-d H:i:s",
 						strtotime("{$shift["weekAndDay"]} {$shift['time']}")
 					),
-					$shift["shiftCapacity"]
+					$shift["shiftCapacity"],
+					$shift["sector"],
 				];
 			}, array_filter($shifts, function($shift) {
 				// Filter shifts with capacity less than one.

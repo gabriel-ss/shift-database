@@ -30,15 +30,19 @@ class Shift
 	 *
 	 * @param  array      $shiftList An array of arrays containing shift details
 	 */
-	public function createShifts($shiftList) {
+	public function createShifts($shiftList) { /****/
 
-		$placeholders = str_repeat("(?, ?), ", count($shiftList) - 1) . '(?, ?)';
+		$valuePlaceholder =
+			"(?, ?, (SELECT sector_id FROM sectors WHERE sector_name=?))";
+		$placeholders =
+			str_repeat("$valuePlaceholder, ", count($shiftList) - 1)
+			. $valuePlaceholder;
 
-		$query = $this->connection->prepare("INSERT IGNORE INTO shifts (date, user_count)
+		$query = $this->connection->prepare(
+			"INSERT IGNORE INTO shifts (date, user_count, sector_id)
 			VALUES $placeholders");
 		$query->execute(array_merge(...$shiftList));
 
-		var_dump($query);
 	}
 
 
@@ -111,7 +115,7 @@ class Shift
 	 * @return array                  An associative array containing the data
 	 * returned by the server
 	 */
-	public function getShiftInfo($shiftId, $userId) {
+	public function getShiftInfo($shiftId, $userId) { /****/
 
 		$fields = $userId || $userId === 0 ?
 			", EXISTS(SELECT * FROM shift_entries WHERE user_id = ? AND shift_id=?) AS is_subscribed
@@ -124,11 +128,12 @@ class Shift
 
 		$query = $this->connection->prepare(
 			"SELECT
-				shifts.shift_id, date, user_count
+				shifts.shift_id, date, user_count, sector_name
 				$fields
 			FROM
 				shifts
 				LEFT JOIN shift_entries	ON shifts.shift_id=shift_entries.shift_id
+				LEFT JOIN sectors ON shifts.sector_id=sectors.sector_id
 				$source
 			WHERE
 				shifts.shift_id=?"
@@ -146,6 +151,20 @@ class Shift
 		}
 
 		return $result;
+	}
+
+
+	/**
+	 * Returna an array with the names of all valid sectors.
+	 *
+	 * @return array                  An associative array containing the data
+	 * returned by the server
+	 */
+	public function getSectorList() {
+
+		$query = $this->connection->prepare("SELECT sector_name FROM sectors");
+		$query->execute();
+		return $query->fetchAll(PDO::FETCH_COLUMN, 0);
 	}
 
 
@@ -177,18 +196,19 @@ class Shift
 	 * from 0 to 6 representing the day of the week.
 	 *
 	 * @param string   $dayReference     A string containing the ISO week
-	 * representation (yyyy"-W"ww") of the current week.
+	 * representation (yyyy"-W"ww) of the current week.
 	 *
 	 * @return array
 	 */
-	public function queryShiftsByWeek($week)
-	{
+	public function queryShiftsByWeek($week) { /****/
 		$weekStart = date("Y-m-d", strtotime($week));
 		$weekEnd = date_create($week)->modify("+1 week")->format("Y-m-d");
-		$query = $this->connection->prepare("SELECT shifts.shift_id, date, user_count,
-			count(user_id) AS subscriptions FROM shifts LEFT JOIN shift_entries
-			ON shifts.shift_id=shift_entries.shift_id	WHERE
-			date > ? AND date < ? GROUP BY shift_id ORDER BY date"
+		$query = $this->connection->prepare(
+			"SELECT shifts.shift_id, date, user_count, sector_name,
+			count(user_id) AS subscriptions FROM shifts LEFT JOIN
+			shift_entries ON shifts.shift_id=shift_entries.shift_id LEFT JOIN
+			sectors ON shifts.sector_id=sectors.sector_id
+			WHERE date > ? AND date < ? GROUP BY shift_id ORDER BY date"
 		);
 
 		// Makes a query that returns shift entries in the period of one week
@@ -200,9 +220,10 @@ class Shift
 			$dt = new DateTime($value['date']);
 			$date = $dt->format("w");
 			$time = $dt->format("H:i");
+			$sector = $value["sector_name"];
 
-			$schedule[$time][$date]["shift_id"] = $value['shift_id'];
-			$schedule[$time][$date]["remainingSpace"] = $value['user_count'] - $value['subscriptions'];
+			$schedule[$time][$date][$sector]["shift_id"] = $value['shift_id'];
+			$schedule[$time][$date][$sector]["remainingSpace"] = $value['user_count'] - $value['subscriptions'];
 		}
 
 		return $schedule ?? [];
@@ -217,10 +238,11 @@ class Shift
 	 * @param  integer $userId The numeric identifier of the user.
 	 * @return array
 	 */
-	public function queryShiftsByUser($userId)
-	{
-		$query = $this->connection->prepare("SELECT shifts.shift_id, date FROM
+	public function queryShiftsByUser($userId) { /****/
+		$query = $this->connection->prepare(
+			"SELECT shifts.shift_id, `date`, user_count, sector_name FROM
 			shift_entries INNER JOIN shifts ON shifts.shift_id = shift_entries.shift_id
+			INNER JOIN sectors ON shifts.sector_id = sectors.sector_id
 			WHERE user_id = ?
 			ORDER BY date"
 		);

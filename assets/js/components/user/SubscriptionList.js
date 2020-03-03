@@ -31,7 +31,7 @@ class SubscriptionList extends Component {
 
 		return `
 		<div class="container">
-			<table><tr><th>Date</th><th>Time</th><th></th></tr>
+			<table><tr><th>Date</th><th>Time</th><th>Sector</th></tr>
 				${this.renderRows()}
 			</table>
 		</div>
@@ -42,19 +42,15 @@ class SubscriptionList extends Component {
 	renderRows() {
 
 		if (!this.state.list || !this.state.list.length)
-			return "<tr><td>--</td><td>--</td></tr></table>";
+			return "<tr><td>--</td><td>--</td><td>--</td></tr></table>";
 
 
 		return this.state.list.reduce((acc, entry) =>
 			`${acc}
-			<tr>
-			<td>${entry.date.toLocaleDateString()}</td>
-			<td>${entry.date.toTimeString().substring(0, 5)}</td>
-				<td>
-					<button onclick="${this.getRef()}.childComponents.modal.setShift(${entry.shiftId})">
-						Show Details
-					</button>
-				</td>
+			<tr onclick="${this.getRef()}.childComponents.modal.setShift(${entry.shiftId})">
+				<td>${entry.date.toLocaleDateString()}</td>
+				<td>${entry.date.toTimeString().substring(0, 5)}</td>
+				<td>${entry.sector}</td>
 			</tr>`, "");
 
 	}
@@ -66,6 +62,7 @@ class SubscriptionList extends Component {
 			this.state.list = data.map(entry => ({
 				shiftId: entry.shift_id,
 				date: new Date(entry.date),
+				sector: entry.sector_name,
 			}));
 
 			this.update();

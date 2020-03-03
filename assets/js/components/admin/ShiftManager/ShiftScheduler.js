@@ -12,7 +12,11 @@ class ShiftScheduler extends Component {
 			week: state.week,
 			schedule: state.schedule,
 			defaultCapacity: state.defaultCapacity,
+			sectorList: state.sectorList,
 		};
+
+		Shift.fetchSectorList()
+			.then(sectorList => (this.state.sectorList = sectorList));
 
 	}
 
@@ -31,19 +35,22 @@ class ShiftScheduler extends Component {
 					<tfoot>
 						<tr id="add-schedule-row">
 							<th><input type="time"/></th>
-							<td colspan="5">
+							<td colspan="6">
 								<button class="full-width" onclick="${this.getRef()}.addRow()">
 									Add New Row
-								</button>
-							</td>
-							<td>
-								<button class="primary" onclick="${this.getRef()}.createSchedule()">
-									Create shifts
 								</button>
 							</td>
 						</tr>
 					</tfoot>
 				</table>
+				<div>
+					<select id="sector-selector" class="full-width">
+						${this.renderSectorList()}
+					</select>
+					<button class="full-width primary" onclick="${this.getRef()}.createSchedule()">
+						Create Shifts
+					</button>
+				</div>
 		`;
 
 	}
@@ -82,20 +89,32 @@ class ShiftScheduler extends Component {
 	}
 
 
+	renderSectorList() {
+
+		return this.state.sectorList.reduce((acc, sector) =>
+			`${acc}<option value="${sector}">${sector}</option>`, "");
+
+	}
+
+
 	createSchedule() {
 
 		if (!this.state.week) return;
 
 		const schedule = [...document.querySelector("#schedule").children];
+		const sector = document.querySelector("#sector-selector").value;
 		const shiftList = schedule.flatMap(tableRow => {
 
 			const [{innerText: time}, ...cells] = tableRow.children;
-			const shiftCapacity = cells.map(cell => cell.firstChild.value);
+			const shiftCapacity = cells
+				.filter(cell => cell.firstChild.tagName === "INPUT")
+				.map(cell => cell.firstChild.value);
 
 			return shiftCapacity.map((shiftCapacity, day) => ({
 				weekAndDay: `${this.state.week}-${day + 1}`,
 				time,
 				shiftCapacity,
+				sector,
 			}));
 
 		});

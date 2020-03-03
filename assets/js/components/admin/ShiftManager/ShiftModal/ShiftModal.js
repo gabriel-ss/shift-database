@@ -15,6 +15,7 @@ class ShiftModal extends Component {
 			date: state.date,
 			capacity: state.capacity,
 			subscriptions: state.subscriptions,
+			sector: state.sector,
 		};
 
 	}
@@ -22,7 +23,7 @@ class ShiftModal extends Component {
 	render() {
 
 		return `
-		<div class="header">Shift Management</div>
+		<div class="header">Shift at ${this.state.sector}</div>
 		<div id="admin-modal-body" class="body">
 			<div class="half-width">
 				<strong>Date:</strong>
@@ -105,6 +106,7 @@ class ShiftModal extends Component {
 				date: new Date(data.date),
 				capacity: data.user_count,
 				subscriptions: data.user_list.length,
+				sector: data.sector_name,
 			});
 
 			this.show();

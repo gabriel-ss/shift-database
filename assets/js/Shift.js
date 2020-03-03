@@ -7,6 +7,16 @@ const Shift = (() => {
 	};
 
 
+	Shift.fetchSectorList = function() {
+
+		return fetch("request-processor.php?intention=get_sector_list", {
+			method: "GET",
+			credentials: "same-origin",
+		}).then(list => list.json());
+
+	};
+
+
 	Shift.fetchWeek = function(week) {
 
 		return fetch(`request-processor.php?intention=get_table&week=${week}`, {

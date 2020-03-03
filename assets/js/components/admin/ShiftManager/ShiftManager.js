@@ -23,6 +23,7 @@ class ShiftManager extends Component {
 				week: this.state.week,
 				schedule: [...DEFAULT_SCHEDULE],
 				defaultCapacity: DEFAULT_SHIFT_CAPACITY,
+				sectorList: [],
 			})
 			.addEventListener("shiftcreation", () =>
 				this.childComponents.viewer.updateWeek());

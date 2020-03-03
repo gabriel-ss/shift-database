@@ -33,7 +33,12 @@ class Scheduler extends Component {
 		return `
 		<div class="container"">
 			<div style="display: flex">
-				<input id="week-selector" type="week" value="${this.state.week || ""}" oninput="${this.getRef()}.onWeekChange(this)">
+				<input
+					id="week-selector"
+					type="week"
+					value="${this.state.week || ""}"
+					oninput="${this.getRef()}.onWeekChange(this)"
+				>
 			</div>
 			<table id="scheduler">
 				<thead>
@@ -79,21 +84,34 @@ class Scheduler extends Component {
 		// Iterates over the days of the week.
 		for (let i = 1; i < 6; i++) {
 
-			// If date[i] does not exist the cellContent will be set to
-			// "--". If it does exist but is equals to 0 cellContent will
-			// be set to "full".
-			const cellContent =
-				(date[i] ? date[i].remainingSpace : "--") || "full";
-			const shiftId = date[i] ? date[i].shift_id : "null";
+			row += "<td class='shift-cell'>";
 
-			row += `
-				<td class='shift-cell'>	${cellContent === "--"
-		? ""
-		: `<button onclick="${this.getRef()}.childComponents.modal.setShift(${shiftId})">
-						Show Details
-					</button>`}
-					<p>${cellContent}</p>
-				</td>`;
+			if (date[i]) {
+
+				row += "<ul>";
+
+				Object.entries(date[i])
+					.sort(([firstSector], [secondSector]) =>
+						(firstSector > secondSector ? 1 : -1))
+					.forEach(([sector, {shift_id: shiftId, remainingSpace}]) => {
+
+						row += `
+							<li>
+								<button onclick="${this.getRef()}.childComponents.modal.setShift(${shiftId})">
+									${sector}
+								</button>
+								<span>${remainingSpace || "full"}</span>
+							</li>
+							`;
+
+					});
+
+				row += "</ul>";
+
+			} else row += "<p>--</p>";
+
+
+			row += "</td>";
 
 		}
 

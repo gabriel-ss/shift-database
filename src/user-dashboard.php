@@ -10,24 +10,35 @@ foreach ($messageFiles as $messageFile) {
 <style media="screen">
 
 	#account-details {
-		float: left;
-		width: 35%;
-		padding: 1em;
-		border-style: solid;
+		width: 85%;
+		margin: auto;
 		border-width: 0 1px 0 0;
 		box-sizing: border-box;
 	}
 
 	#message-board {
-		float: right;
-		width: 65%;
-		padding: 1em;
+		margin: auto;
+		width: 85%;
 		box-sizing: border-box;
 	}
 
 	#messages {
-		height: 200px
+		height: 35vh;
 	}
+
+	#scheduler ul {
+		padding: 0 .75em;
+		margin: 0;
+	}
+	#scheduler li {
+		list-style: none;
+		border-bottom: solid 1px lightgray;
+	}
+	#scheduler li:last-child {border-bottom: none;}
+	#scheduler button {margin: .5em 0;}
+	#scheduler th, #scheduler td {text-align: center}
+
+
 </style>
 <div class="container">
 	<div class="card light">
@@ -40,6 +51,16 @@ foreach ($messageFiles as $messageFile) {
 		</nav>
 		<section id="account" class="body tab-content">
 
+			<div id="message-board">
+				<h2>Messages</h2>
+				<div id="messages" class="slideshow">
+					<?php echo $messages ?>
+				</div>
+			</div>
+			<script type="text/javascript">
+				if (firstMessage = document.querySelector("#messages>div"))
+					firstMessage.classList.add("active");
+			</script>
 			<div id="account-details">
 				<h1>User data</h1>
 				<p class="lead">
@@ -54,15 +75,7 @@ foreach ($messageFiles as $messageFile) {
 					<a href="password-update.php">your password</a> here if you wish.
 				</p>
 			</div>
-			<div id="message-board">
-				<h2 style="text-align:center; margin: 0;">Messages</h2>
-				<div id="messages" class="slideshow">
-					<?php echo $messages ?>
-				</div>
-				<script type="text/javascript">
-					if (firstMessage = document.querySelector("#messages>div"))
-						firstMessage.classList.add("active");
-				</script>
+
 		</section>
 		<section id="shifts" class="body tab-content">
 			<table class="" id="shift-table">

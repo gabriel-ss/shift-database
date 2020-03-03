@@ -1,19 +1,25 @@
+<?php
+$messageFiles = array_diff(scandir("../local/messages/"), array('..', '.'));
+$messages = '';
+foreach ($messageFiles as $messageFile) {
+	$message = implode('<br/>', file("../local/messages/$messageFile"));
+	$messages .= "<div class='slideshow-content'>$message</div>";
+}
+
+?>
 <style media="screen">
 
 	#account-details {
-		float: left;
-		width: 35%;
-		padding: 1em;
-		border-style: solid;
+		width: 85%;
+		margin: auto;
 		border-width: 0 1px 0 0;
 		box-sizing: border-box;
 	}
 
 	#message-board {
-		float: right;
-		width: 65%;
-		padding: 1em;
-		box-sizing: border-box;
+      margin: auto;
+      width: 85%;
+      box-sizing: border-box;
 	}
 
 	#schedule input{
@@ -37,8 +43,21 @@
 	}
 
 	#messages {
-		height: 200px
+		height: 35vh;
 	}
+
+	#viewer ul {
+		padding: 0 .75em;
+		margin: 0;
+	}
+	#viewer li {
+		list-style: none;
+		border-bottom: solid 1px lightgray;
+	}
+	#viewer li:last-child {border-bottom: none;}
+	#viewer button {margin: .5em 0;}
+	#viewer th, #viewer td {text-align: center}
+
 </style>
 <div class="container">
 	<div class="card light">
@@ -51,6 +70,16 @@
 		</nav>
 		<section id="account" class="body tab-content">
 
+			<div id="message-board">
+				<h2>Messages</h2>
+				<div id="messages" class="slideshow">
+					<?php echo $messages ?>
+				</div>
+			</div>
+			<script type="text/javascript">
+				if (firstMessage = document.querySelector("#messages>div"))
+					firstMessage.classList.add("active");
+			</script>
 			<div id="account-details">
 				<h1>User data</h1>
 				<p class="lead">
@@ -65,11 +94,7 @@
 					<a href="password-update.php">your password</a> here if you wish.
 				</p>
 			</div>
-			<div id="message-board">
-				<h2 style="text-align:center; margin: 0;">Messages</h2>
-				<div id="messages">
-					<h1>I AM ROOT!</h1>
-				</div>
+
 		</section>
 		<section id="shifts" class="body tab-content"></section>
 		<section id="users" class="body tab-content"></section>
