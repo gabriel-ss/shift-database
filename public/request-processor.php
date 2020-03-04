@@ -12,6 +12,25 @@ $shift = new Shift($connection);
 switch ($_REQUEST["intention"]) {
 
 	/**
+	 * Update the database configuration.
+	 */
+	case "set_config":
+		if ($user->getAccessLevel() !== "admin") break;
+
+		$systemConfig = json_decode(file_get_contents("../local/system-config.json"), true);
+		$updatedConfig = json_decode(file_get_contents('php://input'), true);
+
+		foreach ($updatedConfig as $config => $newValue) {
+			if (isset($systemConfig[$config]))
+				$systemConfig[$config] = $newValue;
+		}
+
+		file_put_contents("../local/system-config.json", json_encode($systemConfig, JSON_PRETTY_PRINT));
+
+		break;
+
+
+	/**
 	 * Returns a JSON representation of an object where each key is a string with
 	 * the shift time and the value is an object in which the keys represent
 	 * the day of the week with a number from 0 to 6.
