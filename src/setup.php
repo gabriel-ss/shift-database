@@ -14,7 +14,11 @@ session_start();
 
 
 $connection =
-	new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $dbuser, $password);
+	new PDO(
+		'mysql:host=' . DB_HOST  . ';dbname=' . DB_NAME  . ';charset=utf8',
+		DB_USER,
+		DB_PASSOWRD,
+	);
 $userDataAccessor = new UserDataAccessor($connection);
 
 $user = isset($_SESSION["user_id"]) ?

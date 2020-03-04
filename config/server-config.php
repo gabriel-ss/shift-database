@@ -1,6 +1,6 @@
 <?php
 // Database Configurations
-$host = "localhost";
-$dbuser = "root";
-$password = "123456";
-$dbname = "testdb";
+const DB_HOST = "localhost";
+const DB_USER = "root";
+const DB_PASSOWRD = "123456";
+const DB_NAME = "testdb";
