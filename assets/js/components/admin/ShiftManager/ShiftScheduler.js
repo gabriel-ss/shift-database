@@ -44,6 +44,10 @@ class ShiftScheduler extends Component {
 					</tfoot>
 				</table>
 				<div>
+
+					<button class="full-width" onclick="${this.getRef()}.setDefaultSchedule()">
+						Set schedule as default
+					</button>
 					<select id="sector-selector" class="full-width">
 						${this.renderSectorList()}
 					</select>
@@ -93,6 +97,17 @@ class ShiftScheduler extends Component {
 
 		return this.state.sectorList.reduce((acc, sector) =>
 			`${acc}<option value="${sector}">${sector}</option>`, "");
+
+	}
+
+
+	setDefaultSchedule() {
+
+		fetch("request-processor.php?intention=set_config", {
+			method: "POST",
+			headers: {"Content-Type": "application/json"},
+			body: JSON.stringify({DEFAULT_SCHEDULE: this.state.schedule}),
+		});
 
 	}
 

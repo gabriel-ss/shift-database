@@ -69,6 +69,7 @@ foreach ($messageFiles as $messageFile) {
 				<li class="tab-title" data-tab-target="account">Account</li>
 				<li class="tab-title" data-tab-target="shifts">Shift Management</li>
 				<li class="tab-title" data-tab-target="users">User Management</li>
+				<li class="tab-title" data-tab-target="sysconfig">System Configuration</li>
 			</ul>
 		</nav>
 		<section id="account" class="body tab-content">
@@ -101,6 +102,7 @@ foreach ($messageFiles as $messageFile) {
 		</section>
 		<section id="shifts" class="body tab-content"></section>
 		<section id="users" class="body tab-content"></section>
+		<section id="sysconfig" class="body tab-content"></section>
 		</div>
 	</div>
 </div>
