@@ -1,0 +1,10 @@
+{
+    "DEFAULT_SHIFT_CAPACITY": 7,
+    "DEFAULT_SCHEDULE": [
+        "09:00",
+        "13:00",
+        "16:00"
+    ],
+    "SUBSCRIPTION_TIME_LIMIT": 120,
+    "UNSUBSCRIPTION_TIME_LIMIT": 30
+}

@@ -39,12 +39,9 @@ if (!$user) {
 ?>
 <!DOCTYPE html>
 <script type="text/javascript">
-	window.config = {
-		DEFAULT_SHIFT_CAPACITY: <?php echo $defaultShiftCapacity; ?>,
-		DEFAULT_SCHEDULE: <?php echo json_encode($defaultSchedule); ?>,
-		SUBSCRIPTION_TIME_LIMIT: <?php echo $subscriptionTimeLimit; ?>,
-		UNSUBSCRIPTION_TIME_LIMIT: <?php echo $unsubscriptionTimeLimit; ?>,
-	}
+	window.config = JSON.parse(
+		'<?php echo file_get_contents("../local/system-config.json"); ?>'
+	);
 </script>
 <html>
 	<head>
