@@ -40,7 +40,7 @@ if (!$user) {
 <!DOCTYPE html>
 <script type="text/javascript">
 	window.config = JSON.parse(
-		'<?php echo file_get_contents("../local/system-config.json"); ?>'
+		'<?php echo str_replace("\n", '\n', file_get_contents("../local/system-config.json")); ?>'
 	);
 </script>
 <html>
