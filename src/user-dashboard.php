@@ -2,7 +2,10 @@
 $messageFiles = array_diff(scandir("../local/messages/"), array('..', '.'));
 $messages = '';
 foreach ($messageFiles as $messageFile) {
-	$message = implode('<br/>', file("../local/messages/$messageFile"));
+	$message = substr($messageFile, -4) == "html" ?
+		file_get_contents($messageFile) :
+		implode('<br/>', file("../local/messages/$messageFile"));
+
 	$messages .= "<div class='slideshow-content'>$message</div>";
 }
 
