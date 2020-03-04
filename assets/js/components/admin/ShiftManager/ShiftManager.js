@@ -34,7 +34,7 @@ class ShiftManager extends Component {
 	render() {
 
 		return `
-		<div class="container"">
+		<div class="container">
 			<div style="display: flex">
 				<input id="week-selector" type="week" value="${this.state.week || ""}" oninput="${this.getRef()}.onWeekChange(this)">
 				<button class="tab-title" onclick="${this.getRef()}.update({isCreating: true})">Scheduler</button>
