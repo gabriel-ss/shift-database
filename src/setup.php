@@ -1,5 +1,5 @@
 <?php
-require '../local/config.php';
+require '../local/server-config.php';
 
 
 function autoloader($class) {
