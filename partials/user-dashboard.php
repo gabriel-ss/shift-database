@@ -43,7 +43,7 @@ foreach ($messageFiles as $messageFile) {
 
 
 </style>
-<div class="container">
+<div class="container section">
 	<div class="card light">
 		<nav class="header">
 			<ul class="tab-group">
@@ -80,19 +80,8 @@ foreach ($messageFiles as $messageFile) {
 			</div>
 
 		</section>
-		<section id="shifts" class="body tab-content">
-			<table class="" id="shift-table">
-			</table>
-			<div class="slideshow" style="position: relative">
-				<div class="slideshow-content">
-					<div class="date">This Week</div>
-				</div>
-			</div>
-			<div class="container ">
-			</div>
-		</section>
-		<section id="subscription-list" class="body tab-content">
-		</section>
+		<section id="shifts" class="body tab-content"></section>
+		<section id="subscription-list" class="body tab-content"></section>
 		</div>
 	</div>
 </div>
