@@ -40,13 +40,13 @@ if (!$user) {
 <!DOCTYPE html>
 <script type="text/javascript">
 	window.config = JSON.parse(
-		'<?php echo str_replace("\n", '\n', file_get_contents("../local/system-config.json")); ?>'
+		'<?php echo str_replace("\n", '\n', file_get_contents("../config/system-config.json")); ?>'
 	);
 </script>
 <html>
 	<head>
 		<meta charset="utf-8">
-		<link rel="stylesheet" href="/css/master.css">
+		<link rel="stylesheet" href="/assets/master.css">
 		<title>Shift Scheduler</title>
 	</head>
 	<body>

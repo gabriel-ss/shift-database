@@ -6,7 +6,7 @@
  * the backend and how it will be futher treated by this processor.
  */
 
-require '../local/setup.php';
+require '../partials/setup.php';
 
 $shift = new Shift($connection);
 switch ($_REQUEST["intention"]) {
@@ -17,7 +17,7 @@ switch ($_REQUEST["intention"]) {
 	case "set_config":
 		if ($user->getAccessLevel() !== "admin") break;
 
-		$systemConfig = json_decode(file_get_contents("../local/system-config.json"), true);
+		$systemConfig = json_decode(file_get_contents("../config/system-config.json"), true);
 		$updatedConfig = json_decode(file_get_contents('php://input'), true);
 
 		foreach ($updatedConfig as $config => $newValue) {
@@ -25,7 +25,7 @@ switch ($_REQUEST["intention"]) {
 				$systemConfig[$config] = $newValue;
 		}
 
-		file_put_contents("../local/system-config.json", json_encode($systemConfig, JSON_PRETTY_PRINT));
+		file_put_contents("../config/system-config.json", json_encode($systemConfig, JSON_PRETTY_PRINT));
 
 		break;
 

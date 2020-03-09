@@ -1,10 +1,10 @@
 <?php
-$messageFiles = array_diff(scandir("../local/messages/"), array('..', '.'));
+$messageFiles = array_diff(scandir("../config/messages/"), array('..', '.'));
 $messages = '';
 foreach ($messageFiles as $messageFile) {
 	$message = substr($messageFile, -4) == "html" ?
 		file_get_contents($messageFile) :
-		implode('<br/>', file("../local/messages/$messageFile"));
+		implode('<br/>', file("../config/messages/$messageFile"));
 
 	$messages .= "<div class='slideshow-content'>$message</div>";
 }
@@ -114,4 +114,4 @@ foreach ($messageFiles as $messageFile) {
 
 <div id="shift-management-modal" class="modal"></div>
 
-<script src="js/master.js" charset="utf-8"></script>
+<script src="assets/master.js" charset="utf-8"></script>

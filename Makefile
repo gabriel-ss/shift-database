@@ -1,9 +1,8 @@
 build:
-	mkdir -p dist/local dist/public/js
-	cp -rf src/* config/* dist/local
-	cp -rf public  dist/
-	cp -rf assets/css dist/public
-	rollup -f umd assets/js/main.js -o dist/public/js/master.js
+	mkdir -p dist/public/assets
+	cp -rf classes/ config/ partials/ public/ dist/
+	cp -rf assets/css/master.css dist/public/assets
+	rollup -f umd assets/js/main.js -o dist/public/assets/master.js
 
 clean:
 	rm -rf dist/*

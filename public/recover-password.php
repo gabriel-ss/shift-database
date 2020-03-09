@@ -1,6 +1,6 @@
 <?php
 
-require '../local/header.php';
+require '../partials/header.php';
 
 if (isset($_POST["recovery_email"])) {
 

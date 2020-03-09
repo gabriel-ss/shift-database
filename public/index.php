@@ -1,14 +1,14 @@
 <?php
-require '../local/header.php';
+require '../partials/header.php';
 
 if ($user):
 	switch ($user->getAccessLevel()) {
 		case 'user':
-			include '../local/user-dashboard.php';
+			include '../partials/user-dashboard.php';
 			break;
 
 		case 'admin':
-			include '../local/admin-dashboard.php';
+			include '../partials/admin-dashboard.php';
 			break;
 
 		default:
@@ -16,7 +16,7 @@ if ($user):
 			break;
 	}
 else:
-	include '../local/guest-dashboard.php';
+	include '../partials/guest-dashboard.php';
 endif; ?>
 </body>
 </html>

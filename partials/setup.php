@@ -1,10 +1,10 @@
 <?php
-require '../local/server-config.php';
+require '../config/server-config.php';
 
 
 function autoloader($class) {
 	$class = str_replace("\\", DIRECTORY_SEPARATOR, $class);
-	include_once '../local/classes/' . $class . '.php';
+	include_once '../classes/' . $class . '.php';
 }
 
 
