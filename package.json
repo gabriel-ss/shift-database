@@ -1,0 +1,38 @@
+{
+	"name": "shiftdb",
+	"version": "0.1.0",
+	"description": "A shift management application",
+	"main": "public/index.php",
+	"directories": {
+		"test": "test"
+	},
+	"scripts": {
+		"build:back-end": "mkdir -p dist && cp -rf classes/ config/ partials/ public/ dist/",
+		"build:front-end": "parcel build assets/js/master.ts -d dist/public/assets",
+		"build": "npm run build:back-end && npm run build:front-end",
+		"start": "parcel start assets/js/master.ts -d dist/public/assets",
+		"clean": "rm -rf dist/*"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/gabriel-ss/shift-database.git"
+	},
+	"author": "Gabriel Silveira",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/gabriel-ss/shift-database/issues"
+	},
+	"homepage": "https://github.com/gabriel-ss/shift-database#readme",
+	"dependencies": {
+		"bulma": "^0.8.0",
+		"bulma-calendar": "^6.0.7",
+		"preact": "^10.3.3"
+	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^2.22.0",
+		"@typescript-eslint/parser": "^2.22.0",
+		"eslint": "^6.8.0",
+		"eslint-plugin-react": "^7.18.3",
+		"typescript": "^3.8.3"
+	}
+}
