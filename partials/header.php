@@ -50,22 +50,29 @@ if (!$user) {
 		<title>Shift Scheduler</title>
 	</head>
 	<body>
-		<header class="primary">
+		<nav class="navbar is-primary">
 			<div class="container">
-				<a href="index.php" class="header-brand">Database</a>
+				<div class="navbar-brand">
+					<a href="index.php" class="navbar-item title">Database</a>
+				</div>
 				<?php if ($user): ?>
-					<div class="header-sidetext">
-						Welcome	<?php echo
-							strstr($user->getName(), " ", true) ?: $user->getName(); ?>
+					<div class="navbar-item navbar-end has-dropdown is-hoverable">
+						<a class="navbar-link">
+							Welcome	<?php echo
+							strstr($user->getName(), " ", true) ?: $user->getName();
+							?>
+						</a>
+
+						<div class="navbar-dropdown">
+							<a href="email-update.php" class="navbar-item">
+								Change E-mail
+							</a>
+							<a href="password-update.php" class="navbar-item">
+								Change Password
+							</a>
+						</div>
 					</div>
-				<?php else: ?>
-					<form class="header-form" action="<?php echo $_SERVER["PHP_SELF"] ?>" method="POST">
-						<input class="form-control"type="email" name="email" placeholder="e-mail">
-						<input type="password" name="password" placeholder="password">
-						<input type="submit" value="Login">
-						<a style="color:white" href="/recover-password.php">Recover password</a>
-					</form>
 				<?php endif; ?>
 
 			</div>
-		</header>
+		</nav>
