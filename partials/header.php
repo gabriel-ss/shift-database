@@ -1,6 +1,11 @@
 <?php
 require "setup.php";
 
+if (isset($_REQUEST["logout"])) {
+	$user->logout();
+	$user = null;
+}
+
 if (!$user) {
 
 	$failedToLogin = false;
@@ -69,6 +74,9 @@ if (!$user) {
 							</a>
 							<a href="password-update.php" class="navbar-item">
 								Change Password
+							</a>
+							<a href="index.php?logout" class="navbar-item">
+								Logout
 							</a>
 						</div>
 					</div>
