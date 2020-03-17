@@ -75,6 +75,7 @@ if (!$user) {
 							<a href="password-update.php" class="navbar-item">
 								Change Password
 							</a>
+      					<hr class="dropdown-divider">
 							<a href="index.php?logout" class="navbar-item">
 								Logout
 							</a>
