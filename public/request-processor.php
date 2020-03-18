@@ -36,14 +36,12 @@ switch ($_REQUEST["intention"]) {
 	 * the day of the week with a number from 0 to 6.
 	 */
 	case "get_table":
-		echo json_encode($shift->queryShiftsByWeek($_GET["week"]));
+		echo json_encode($shift->queryShiftsByWeek($_GET["week"]), JSON_FORCE_OBJECT);
 		break;
 
 
 	/**
-	 * Returns a JSON representation of an object where each key is a string with
-	 * the shift time and the value is an object in which the keys represent
-	 * the day of the week with a number from 0 to 6.
+	 * Returns a list with all avaliable sectors
 	 */
 	case "get_sector_list":
 		echo json_encode($shift->getSectorList());
