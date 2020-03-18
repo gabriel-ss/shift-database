@@ -19,4 +19,33 @@ function getWeekNumber(date = new Date()) {
 }
 
 
-export {getWeekNumber};
+/**
+ * Return a Date object of the first day of the week of the suplied date.
+ * @param  {Date}   [date] The reference date
+ * @return {Date}          The ISO 8601 week start
+ */
+function getWeekStart(date) {
+
+	const startDate = new Date(date);
+
+	startDate.setDate(startDate.getDate() + 1 - (startDate.getDay() || 7));
+
+	return startDate;
+
+}
+
+
+/**
+ * Return a Promise that resolve after "ms" miliseconds with an optional value
+ * of "value".
+ * @param  {number} ms    The timeout in miliseconds
+ * @param  {any}    value Optional value to resolve
+ * @return {Promise<any>}
+ */
+function hold(ms, value) {
+
+	return new Promise(resolve => setTimeout(() => resolve(value), ms));
+
+}
+
+export {getWeekNumber, getWeekStart, hold};
