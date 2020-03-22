@@ -4,11 +4,6 @@ import UserUI from "./components/user/App";
 import AdminUI from "./components/admin/App";
 import "bulma/bulma.sass";
 
-declare global {
-	interface Window {
-		config: any;
-	}
-}
 
 const app = document.querySelector("#app")!;
 
