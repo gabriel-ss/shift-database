@@ -10,8 +10,8 @@
 		"build:back-end": "mkdir -p dist && cp -rf classes/ config/ partials/ public/ dist/",
 		"build:front-end": "parcel build assets/js/master.ts -d dist/public/assets",
 		"build": "npm run build:back-end && npm run build:front-end",
-		"start": "parcel start assets/js/master.ts -d dist/public/assets",
-		"clean": "rm -rf dist/*"
+		"watch": "parcel watch assets/js/master.ts -d dist/public/assets --public-url ../assets",
+		"clean": "rm -rf dist/* .cache"
 	},
 	"repository": {
 		"type": "git",
@@ -29,10 +29,14 @@
 		"preact": "^10.3.3"
 	},
 	"devDependencies": {
+		"@types/node": "^13.9.3",
 		"@typescript-eslint/eslint-plugin": "^2.22.0",
 		"@typescript-eslint/parser": "^2.22.0",
 		"eslint": "^6.8.0",
 		"eslint-plugin-react": "^7.18.3",
 		"typescript": "^3.8.3"
-	}
+	},
+	"browserslist": [
+		"Chrome 78"
+	]
 }

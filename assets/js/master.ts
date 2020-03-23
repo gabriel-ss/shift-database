@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-process-env, global-require
 if (process.env.NODE_ENV === "development") require("preact/debug");
 import {render, h} from "preact";
 import UserUI from "./components/user/App";
