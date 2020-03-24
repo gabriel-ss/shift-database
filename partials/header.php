@@ -44,9 +44,7 @@ if (!$user) {
 ?>
 <!DOCTYPE html>
 <script type="text/javascript">
-	window.config = JSON.parse(
-		'<?php echo str_replace("\n", '\n', file_get_contents("../config/system-config.json")); ?>'
-	);
+	window.config = <?php echo file_get_contents("../config/system-config.json"); ?>
 </script>
 <html>
 	<head>
