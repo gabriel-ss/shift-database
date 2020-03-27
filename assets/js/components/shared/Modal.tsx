@@ -1,4 +1,4 @@
-import {Component, h, JSX, FunctionalComponent} from "preact";
+import {h, JSX, FunctionalComponent} from "preact";
 
 
 interface ModalProps {
