@@ -1,13 +1,11 @@
 import {Component, h, JSX} from "preact";
 import Shift from "../../Shift";
+import {observer} from "mobx-preact";
+import {AdminRootStore} from "../../stores/RootStore";
+
 
 const {DEFAULT_SCHEDULE, DEFAULT_SHIFT_CAPACITY} = window.config;
 
-interface ShiftManagerProps {
-	week: string;
-	isCreating: boolean;
-	onCreation: () => void;
-}
 
 interface ShiftSchedulerState {
 	schedule: Record<string, number[]>;
@@ -17,9 +15,11 @@ interface ShiftSchedulerState {
 }
 
 
-class ShiftScheduler extends Component<ShiftManagerProps, ShiftSchedulerState> {
+@observer
+class ShiftScheduler extends Component
+	<{store: AdminRootStore}, ShiftSchedulerState> {
 
-	public constructor(props: ShiftManagerProps) {
+	public constructor(props: {store: AdminRootStore}) {
 
 		super(props);
 
@@ -39,7 +39,7 @@ class ShiftScheduler extends Component<ShiftManagerProps, ShiftSchedulerState> {
 	public render(): JSX.Element {
 
 		return (
-			<div className={this.props.isCreating ? "" : "is-hidden"}>
+			<div>
 				<table className="table is-bordered is-fullwidth">
 					<thead><tr>
 						<th></th>
@@ -179,18 +179,18 @@ class ShiftScheduler extends Component<ShiftManagerProps, ShiftSchedulerState> {
 
 	private createSchedule = (): void => {
 
-		if (!this.props.week) return;
+		if (!this.props.store.currentSelectedWeek) return;
 
 		const shiftList = Object.entries(this.state.schedule)
 			.flatMap(([time, row]) => row
 				.map((shiftCapacity, day) => ({
-					weekAndDay: `${this.props.week}-${day + 1}`,
+					weekAndDay: `${this.props.store.currentSelectedWeek}-${day + 1}`,
 					time,
 					shiftCapacity,
 					sector: this.state.currentSector!,
 				})));
 
-		Shift.create(shiftList).then(this.props.onCreation);
+		Shift.create(shiftList).then(this.props.store.refreshData);
 
 	}
 

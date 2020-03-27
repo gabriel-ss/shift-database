@@ -2,6 +2,7 @@ type Schedule = Record<string, Record<number, Record<string, {
 	shift_id: string;
 	remainingSpace: number;
 }>>>
+interface UserSubscription{shiftID: string; date: Date; sector: string}
 
 
 class Shift {
@@ -38,7 +39,7 @@ class Shift {
 
 
 	public static async fetchSubscriptions(userID?: number):
-	Promise<{shiftID: string; date: Date; sector: string}[]> {
+	Promise<UserSubscription[]> {
 
 		const response = await fetch(`request-processor.php?intention=get_user_subscriptions&userId=${userID}`, {
 			method: "GET",
@@ -85,7 +86,7 @@ class Shift {
 		shift: Shift;
 		date: Date;
 		capacity: number;
-		subscriptionList?: {name: string; email: string; userID: string}[];
+		subscribersList?: {name: string; email: string; userID: string}[];
 		subscriptions: number;
 		isSubscribed: boolean;
 		sector: string;
@@ -104,7 +105,7 @@ class Shift {
 			shift: new Shift(this.id),
 			date: new Date(data.date),
 			capacity: Number(data.user_count),
-			subscriptionList: data.user_list && data.user_list.map(
+			subscribersList: data.user_list && data.user_list.map(
 				({name, email, userId}: Record<string, string>) =>
 					({name, email, userID: userId}),
 			),
@@ -154,3 +155,4 @@ class Shift {
 }
 
 export default Shift;
+export {Schedule, UserSubscription};

@@ -1,130 +1,21 @@
 import {h, JSX, FunctionalComponent} from "preact";
-import {useState} from "preact/hooks";
-import {AdminShiftModal, UserShiftModal} from "./ShiftModal";
-import ShiftScheduler from "../admin/ShiftScheduler";
-import WeekPicker from "../shared/WeekPicker";
-import {Tabs, TabList, Tab, TabPanel} from "./Tabs";
-import Shift from "../../Shift";
-import {getWeekNumber} from "../../utils.js";
+import {Schedule} from "../../Shift";
+import {observer} from "mobx-preact";
+import {RootStore} from "../../stores/RootStore";
 
 
-type Schedule = Record<string, Record<number, Record<string, {
-	shift_id: string;
-	remainingSpace: number;
-}>>>
-
-
-const AdminShiftViewer: FunctionalComponent = () => {
-
-	const [currentTab, setCurrentTab] = useState(0);
-	const [week, setWeek] = useState(getWeekNumber());
-	const [schedule, isFetching, fetchWeek] = useFetchedWeek(week);
-	const [isShowingModal, setIsShowingModal] = useState(false);
-	const [currentSelectedShiftID, setCurrentSelectedShiftID] =
-		useState<string | undefined>(void 0);
-
-
-	return (
-		<div className="container">
-			<WeekPicker
-				value={week}
-				onInput={e => { setWeek(e.currentTarget.value); fetchWeek(); }}
+const ShiftViewer = observer(<T extends RootStore<any>>(props: Readonly<{
+	store: T;
+}>): JSX.Element =>
+	<div class="container">
+		<table className="table is-bordered is-fullwidth">
+			<ShiftViewerTableHead week={props.store.currentSelectedWeek} />
+			<ShiftViewerTableBody
+				schedule={props.store.currentSelectedWeekSchedule}
+				editShift={props.store.shiftStore.displayShiftData}
 			/>
-			<Tabs {...{currentTab, setCurrentTab}}>
-				<TabList className="is-fullwidth">
-					<Tab>Shift Viewer</Tab>
-					<Tab>Scheduler</Tab>
-				</TabList>
-				<TabPanel className="section">
-					<table className="table is-bordered is-fullwidth">
-						<ShiftViewerTableHead week={week} />
-						<ShiftViewerTableBody schedule={schedule} editShift={
-							shiftID => {
-
-								setIsShowingModal(true);
-								setCurrentSelectedShiftID(shiftID);
-
-							}
-						}/>
-					</table>
-				</TabPanel>
-				<TabPanel className="section">
-					<ShiftScheduler
-						week={week}	isCreating={Boolean(currentTab)}
-						onCreation={() => { fetchWeek(); setCurrentTab(0); }}
-					/>
-				</TabPanel>
-			</Tabs>
-			<AdminShiftModal
-				isActive={isShowingModal}
-				onHide={() => setIsShowingModal(false)}
-				onShiftUpdate={fetchWeek}
-				shiftID={currentSelectedShiftID!}
-			/>
-		</div>
-	);
-
-};
-
-
-const UserShiftViewer: FunctionalComponent = () => {
-
-	const [week, setWeek] = useState(getWeekNumber());
-	const [schedule, isFetching, fetchWeek] = useFetchedWeek(week);
-	const [isShowingModal, setIsShowingModal] = useState(false);
-	const [currentSelectedShiftID, setCurrentSelectedShiftID] =
-		useState<string | undefined>(void 0);
-
-
-	return (
-		<div class="container">
-			<WeekPicker
-				value={week}
-				onInput={e => { setWeek(e.currentTarget.value); fetchWeek(); }}
-			/>
-			<table className="table is-bordered is-fullwidth">
-				<ShiftViewerTableHead week={week} />
-				<ShiftViewerTableBody schedule={schedule} editShift={shiftID => {
-
-					setIsShowingModal(true);
-					setCurrentSelectedShiftID(shiftID);
-
-				}}/>
-			</table>
-			<UserShiftModal
-				isActive={isShowingModal}
-				onHide={() => setIsShowingModal(false)}
-				onShiftUpdate={fetchWeek}
-				shiftID={currentSelectedShiftID!}
-			/>
-		</div>
-	);
-
-};
-
-
-const useFetchedWeek = (week: string): [Schedule, boolean, () => void] => {
-
-	const [schedule, setSchedule] = useState<Schedule>({});
-	const [isFetching, setIsFetching] = useState(false);
-	const [hasFetched, setHasFetched] = useState(false);
-
-	if (!hasFetched && !isFetching) {
-
-		setIsFetching(true);
-		Shift.fetchWeek(week).then(schedule => {
-
-			setSchedule(schedule);
-			setIsFetching(false);
-			setHasFetched(true);
-
-		});
-
-	}
-
-	return [schedule, isFetching, () => setHasFetched(false)];
-
-};
+		</table>
+	</div>);
 
 
 const getFormatedDate = (day: number, isoWeek: string): string => {
@@ -143,10 +34,11 @@ const getFormatedDate = (day: number, isoWeek: string): string => {
 };
 
 
-const ShiftViewerTableRow = (
-	{time, schedule, editShift}:
-	{time: string; schedule: Schedule; editShift: (shiftID: string) => void},
-): JSX.Element => {
+const ShiftViewerTableRow: FunctionalComponent<{
+	time: string;
+	schedule: Schedule;
+	editShift: (shiftID: string) => void;
+}> = ({time, schedule, editShift}) => {
 
 	const row = schedule[time];
 	let rowData: JSX.Element[] = [];
@@ -186,25 +78,26 @@ const ShiftViewerTableRow = (
 };
 
 
-const ShiftViewerTableHead = ({week}: {week: string}): JSX.Element => {
+const ShiftViewerTableHead: FunctionalComponent<{week: string}> =
+	({week}) => {
 
-	const daysOfTheWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+		const daysOfTheWeek = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
-	return <thead><tr>{[
-		<th></th>,
-		...daysOfTheWeek.reduce((acc, dayOfWeek, index) => [
-			...acc,
-			<th>{dayOfWeek} - {getFormatedDate(index, week)}</th>,
-		],	[] as JSX.Element[]),
-	]}</tr></thead>;
+		return <thead><tr>{[
+			<th></th>,
+			...daysOfTheWeek.reduce((acc, dayOfWeek, index) => [
+				...acc,
+				<th>{dayOfWeek} - {getFormatedDate(index, week)}</th>,
+			],	[] as JSX.Element[]),
+		]}</tr></thead>;
 
-};
+	};
 
 
-const ShiftViewerTableBody = (
-	{schedule, editShift}:
-	{schedule: Schedule; editShift: (shiftID: string) => void},
-): JSX.Element => {
+const ShiftViewerTableBody: FunctionalComponent<{
+	schedule: Schedule;
+	editShift: (shiftID: string) => void;
+}> = ({schedule, editShift}) => {
 
 	const timeList = Object.keys(schedule);
 
@@ -237,4 +130,4 @@ const ShiftViewerTableBody = (
 };
 
 
-export {UserShiftViewer, AdminShiftViewer};
+export {ShiftViewer};

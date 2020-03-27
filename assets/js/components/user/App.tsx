@@ -1,19 +1,40 @@
-import {h, JSX} from "preact";
-import {UserShiftViewer as ShiftViewer} from "../shared/ShiftViewer";
+import {h, JSX, Fragment, createContext} from "preact";
+import {ShiftViewer} from "../shared/ShiftViewer";
 import SubscriptionList from "./SubscriptionList";
+import {UserShiftModal} from "../shared/ShiftModal";
 import {Tabs, TabList, Tab, TabPanel} from "../shared/Tabs";
-import "bulma/bulma.sass";
+import {UserRootStore} from "../../stores/RootStore";
+import WeekPicker from "../shared/WeekPicker";
+
+
+const store = new UserRootStore();
+const Context = createContext(store);
 
 
 const App = (): JSX.Element =>
-	<Tabs>
-		<TabList className="is-fullwidth">
-			<Tab>Shift Subscription</Tab>
-			<Tab>Subscription List</Tab>
-		</TabList>
-		<TabPanel className="section"><ShiftViewer /></TabPanel>
-		<TabPanel className="section"><SubscriptionList /></TabPanel>
-	</Tabs>;
+	<Context.Consumer>{store =>
+		<Fragment>
+			<Tabs>
+				<TabList className="is-fullwidth">
+					<Tab>Shift Subscription</Tab>
+					<Tab>Subscription List</Tab>
+				</TabList>
+				<TabPanel className="section">
+					<div className="container">
+						<WeekPicker
+							value={store.currentSelectedWeek}
+							onInput={e => store.setCurrentWeek(e.currentTarget.value)}
+						/>
+						<ShiftViewer store={store} />
+					</div>
+				</TabPanel>
+				<TabPanel className="section">
+					<SubscriptionList store={store} />
+				</TabPanel>
+			</Tabs>
+			<UserShiftModal store={store}/>
+		</Fragment>}
+	</Context.Consumer>;
 
 
 export default App;
