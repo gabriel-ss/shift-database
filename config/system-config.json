@@ -23,6 +23,7 @@
             4
         ]
     },
+    "MAXIMUM_SUBSCRIPTIONS": 20,
     "SUBSCRIPTION_TIME_LIMIT": 120,
     "UNSUBSCRIPTION_TIME_LIMIT": 30
 }

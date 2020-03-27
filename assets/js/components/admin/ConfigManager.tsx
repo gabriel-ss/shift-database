@@ -4,6 +4,7 @@ const {
 	DEFAULT_SHIFT_CAPACITY,
 	SUBSCRIPTION_TIME_LIMIT,
 	UNSUBSCRIPTION_TIME_LIMIT,
+	MAXIMUM_SUBSCRIPTIONS,
 } = window.config;
 
 class ConfigManager extends Component {
@@ -12,6 +13,7 @@ class ConfigManager extends Component {
 		DEFAULT_SHIFT_CAPACITY,
 		SUBSCRIPTION_TIME_LIMIT,
 		UNSUBSCRIPTION_TIME_LIMIT,
+		MAXIMUM_SUBSCRIPTIONS,
 	};
 
 
@@ -47,6 +49,16 @@ class ConfigManager extends Component {
 						name="UNSUBSCRIPTION_TIME_LIMIT"
 						onInput={this.onInput}
 						value={this.state.UNSUBSCRIPTION_TIME_LIMIT}
+					/>
+				</label>
+				<label className="field label">
+					Maximum subscriptions per sector:
+					<input
+						className="input"
+						type="number"
+						name="MAXIMUM_SUBSCRIPTIONS"
+						onInput={this.onInput}
+						value={this.state.MAXIMUM_SUBSCRIPTIONS}
 					/>
 				</label>
 				<button
