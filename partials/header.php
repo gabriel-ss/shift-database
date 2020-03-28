@@ -6,17 +6,22 @@ if (isset($_REQUEST["logout"])) {
 	$user = null;
 }
 
+
 if (!$user) {
 
 	$failedToLogin = false;
 
+	// Check if user has accessed from a recovery password link
 	if (
 		isset($_SESSION['access_token'], $_REQUEST['access_token']) &&
 		$_SESSION['access_token'] === $_REQUEST['access_token']
 	) {
 
+		// Get email from session that was user to recover the password
 		$recoveryEmail = $_SESSION["recovery_email"];
 		session_destroy();
+
+		// Log user and redirect to the password modification page
 		session_start();
 		$_SESSION["user_id"] = User::searchByEmail($userDataAccessor, $recoveryEmail);
 		User::restoreSession($userDataAccessor, $_SESSION["user_id"]);
