@@ -7,7 +7,8 @@
 		"test": "test"
 	},
 	"scripts": {
-		"build:back-end": "mkdir -p dist && cp -rf classes/ config/ partials/ public/ dist/",
+		"preinstall": "composer create-project",
+		"build:back-end": "mkdir -p dist && cp -rf classes/ config/ partials/ public/ vendor/ dist/",
 		"build:front-end": "parcel build assets/js/master.ts -d dist/public/assets",
 		"build": "npm run build:back-end && npm run build:front-end",
 		"watch": "parcel watch assets/js/master.ts -d dist/public/assets --public-url ../assets",

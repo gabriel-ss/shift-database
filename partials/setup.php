@@ -1,17 +1,8 @@
 <?php
 require '../config/server-config.php';
-
-
-function autoloader($class) {
-	$class = str_replace("\\", DIRECTORY_SEPARATOR, $class);
-	include_once '../classes/' . $class . '.php';
-}
-
-
-spl_autoload_register("autoloader");
+require __DIR__ . '/../vendor/autoload.php';
 
 session_start();
-
 
 $connection =
 	new PDO(
