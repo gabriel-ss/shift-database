@@ -1,7 +1,7 @@
 <?php
 require "setup.php";
 
-if (isset($_REQUEST["logout"])) {
+if (isset($_REQUEST["logout"]) && !empty($user)) {
 	$user->logout();
 	$user = null;
 }
