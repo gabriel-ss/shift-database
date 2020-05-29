@@ -2,7 +2,7 @@
 // Database Configurations
 const DB_HOST = "localhost";
 const DB_USER = "root";
-const DB_PASSOWRD = "123456";
+const DB_PASSWORD = "123456";
 const DB_NAME = "testdb";
 
 // Mailer Configurations
